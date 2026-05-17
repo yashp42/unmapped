@@ -1,0 +1,212 @@
+"""Seed data for Unmapped — real artists used as cultural reference."""
+from datetime import datetime, timezone
+
+
+def now_iso():
+    return datetime.now(timezone.utc).isoformat()
+
+
+ARTISTS = [
+    {"id": "frank-ocean", "name": "Frank Ocean", "tagline": "the patron saint of longing", "scene": "alt-r&b", "era": "2011—present"},
+    {"id": "kendrick-lamar", "name": "Kendrick Lamar", "tagline": "the architect of double meanings", "scene": "west coast / conscious", "era": "2010—present"},
+    {"id": "radiohead", "name": "Radiohead", "tagline": "anxiety, in stereo", "scene": "art rock", "era": "1992—present"},
+    {"id": "tyler-creator", "name": "Tyler, the Creator", "tagline": "the world he keeps re-painting", "scene": "alt-rap", "era": "2009—present"},
+    {"id": "sza", "name": "SZA", "tagline": "diaristic, brave, plural", "scene": "alt-r&b", "era": "2012—present"},
+    {"id": "100-gecs", "name": "100 gecs", "tagline": "everything everywhere all the noise", "scene": "hyperpop", "era": "2015—present"},
+    {"id": "mitski", "name": "Mitski", "tagline": "small rooms, large feelings", "scene": "indie", "era": "2012—present"},
+    {"id": "mf-doom", "name": "MF DOOM", "tagline": "the villain who taught us to read", "scene": "abstract hip-hop", "era": "1991—2020"},
+    {"id": "phoebe-bridgers", "name": "Phoebe Bridgers", "tagline": "the ghost in the chorus", "scene": "indie folk", "era": "2014—present"},
+    {"id": "yves-tumor", "name": "Yves Tumor", "tagline": "rock star from the future", "scene": "experimental", "era": "2015—present"},
+]
+
+ALBUMS = [
+    {"id": "blonde", "title": "Blonde", "artist_id": "frank-ocean", "year": 2016, "color": "#F5E6B3",
+     "universe_tagline": "memory as a hall of mirrors",
+     "motifs": ["unspoken love", "summer rot", "the highway", "the church", "the duplicated self"],
+     "tracks": ["nikes", "ivy", "pink-white", "self-control", "nights", "white-ferrari"]},
+    {"id": "to-pimp-a-butterfly", "title": "To Pimp a Butterfly", "artist_id": "kendrick-lamar", "year": 2015, "color": "#3B2E1F",
+     "universe_tagline": "the cocoon stage of a culture",
+     "motifs": ["caterpillar / butterfly", "the poem", "lucy", "the mirror", "survivor's debt"],
+     "tracks": ["alright", "king-kunta", "u", "the-blacker-the-berry", "mortal-man"]},
+    {"id": "in-rainbows", "title": "In Rainbows", "artist_id": "radiohead", "year": 2007, "color": "#C45B2E",
+     "universe_tagline": "the warmest room Radiohead ever built",
+     "motifs": ["the body returning", "color as feeling", "the long marriage", "weather"],
+     "tracks": ["15-step", "nude", "weird-fishes", "reckoner", "videotape"]},
+    {"id": "igor", "title": "IGOR", "artist_id": "tyler-creator", "year": 2019, "color": "#E84C8A",
+     "universe_tagline": "a love story told by the wrong narrator",
+     "motifs": ["the blonde wig", "the suit", "the unraveling", "wanting to be wanted"],
+     "tracks": ["earfquake", "i-think", "running-out-of-time", "new-magic-wand"]},
+    {"id": "ctrl", "title": "CTRL", "artist_id": "sza", "year": 2017, "color": "#8FB89C",
+     "universe_tagline": "the diary you weren't supposed to read",
+     "motifs": ["the other woman", "self-doubt as honesty", "growing pains"],
+     "tracks": ["love-galore", "the-weekend", "drew-barrymore", "20-something"]},
+    {"id": "1000-gecs", "title": "1000 gecs", "artist_id": "100-gecs", "year": 2019, "color": "#00E5FF",
+     "universe_tagline": "the internet wearing seventeen costumes at once",
+     "motifs": ["irony as armor", "compressed sincerity", "MSN era cosplay"],
+     "tracks": ["money-machine", "745-sticky", "stupid-horse"]},
+]
+
+TRACKS = [
+    {"id": "nikes", "title": "Nikes", "album_id": "blonde", "artist_id": "frank-ocean", "duration": "5:14",
+     "key_line": "we'll let you guys prophesy", "vibe_ids": ["dissociative-summer", "longing-loop"],
+     "samples": ["nikes-sample-1"], "lore_count": 14, "theory_count": 7},
+    {"id": "self-control", "title": "Self Control", "album_id": "blonde", "artist_id": "frank-ocean", "duration": "4:09",
+     "key_line": "I'll be the boyfriend in your wet dreams tonight", "vibe_ids": ["longing-loop", "twilight-driving"],
+     "samples": [], "lore_count": 22, "theory_count": 11},
+    {"id": "nights", "title": "Nights", "album_id": "blonde", "artist_id": "frank-ocean", "duration": "5:07",
+     "key_line": "every night fucks every day up", "vibe_ids": ["dissociative-summer", "third-shift"],
+     "samples": [], "lore_count": 18, "theory_count": 9},
+    {"id": "alright", "title": "Alright", "album_id": "to-pimp-a-butterfly", "artist_id": "kendrick-lamar", "duration": "3:39",
+     "key_line": "we gon' be alright", "vibe_ids": ["protest-hymn", "survivor"],
+     "samples": [], "lore_count": 31, "theory_count": 12},
+    {"id": "u", "title": "u", "album_id": "to-pimp-a-butterfly", "artist_id": "kendrick-lamar", "duration": "4:28",
+     "key_line": "loving you is complicated", "vibe_ids": ["mirror-confrontation"],
+     "samples": [], "lore_count": 19, "theory_count": 8},
+    {"id": "weird-fishes", "title": "Weird Fishes / Arpeggi", "album_id": "in-rainbows", "artist_id": "radiohead", "duration": "5:18",
+     "key_line": "i'll hit the bottom and escape", "vibe_ids": ["underwater-clarity"],
+     "samples": [], "lore_count": 12, "theory_count": 6},
+    {"id": "earfquake", "title": "EARFQUAKE", "album_id": "igor", "artist_id": "tyler-creator", "duration": "3:10",
+     "key_line": "don't go, don't go", "vibe_ids": ["pink-heartbreak"],
+     "samples": [], "lore_count": 16, "theory_count": 7},
+    {"id": "the-weekend", "title": "The Weekend", "album_id": "ctrl", "artist_id": "sza", "duration": "4:32",
+     "key_line": "you like 9 to 5, i'm the weekend", "vibe_ids": ["situationship-blues"],
+     "samples": [], "lore_count": 13, "theory_count": 5},
+    {"id": "money-machine", "title": "money machine", "album_id": "1000-gecs", "artist_id": "100-gecs", "duration": "2:13",
+     "key_line": "hey you lil piss baby", "vibe_ids": ["maximalist-mania"],
+     "samples": [], "lore_count": 9, "theory_count": 3},
+    {"id": "videotape", "title": "Videotape", "album_id": "in-rainbows", "artist_id": "radiohead", "duration": "4:39",
+     "key_line": "no matter what happens now, you shouldn't be afraid", "vibe_ids": ["dying-light"],
+     "samples": [], "lore_count": 21, "theory_count": 10},
+]
+
+VIBES = [
+    {"id": "dissociative-summer", "name": "dissociative summer", "color": "#FFD479",
+     "description": "the heat is a second body. nothing happens. everything feels permanent.",
+     "felt_state": "summer that loops in your head years later", "track_count": 24, "curator_count": 31},
+    {"id": "longing-loop", "name": "longing loop", "color": "#FF1493",
+     "description": "wanting someone who doesn't fully exist anymore. or didn't exist at all.",
+     "felt_state": "rereading the text. it has not changed.", "track_count": 42, "curator_count": 58},
+    {"id": "twilight-driving", "name": "twilight driving", "color": "#6E5BFF",
+     "description": "no destination. blue hour. one hand on the wheel, the other out the window.",
+     "felt_state": "highway as therapy", "track_count": 18, "curator_count": 22},
+    {"id": "third-shift", "name": "third shift", "color": "#0F2E3F",
+     "description": "for the hours when the world is asleep and you are not.",
+     "felt_state": "3:17am. the kitchen light is too bright.", "track_count": 27, "curator_count": 19},
+    {"id": "protest-hymn", "name": "protest hymn", "color": "#CCFF00",
+     "description": "songs that became flags. communal exhale music.",
+     "felt_state": "you are in a crowd and you are not alone", "track_count": 14, "curator_count": 28},
+    {"id": "mirror-confrontation", "name": "mirror confrontation", "color": "#8B0000",
+     "description": "the song that turns the camera on you. uncomfortable, on purpose.",
+     "felt_state": "talking to yourself in second person", "track_count": 11, "curator_count": 17},
+    {"id": "pink-heartbreak", "name": "pink heartbreak", "color": "#FF8FB1",
+     "description": "tears in a tracksuit. bright sound for a dim feeling.",
+     "felt_state": "crying with the windows down", "track_count": 33, "curator_count": 41},
+    {"id": "situationship-blues", "name": "situationship blues", "color": "#7A6E5A",
+     "description": "for the relationship that never got a name.",
+     "felt_state": "you said 'just talking'. it's been seven months.", "track_count": 19, "curator_count": 24},
+    {"id": "underwater-clarity", "name": "underwater clarity", "color": "#3DDBD9",
+     "description": "the muffled, beautiful state of having decided something.",
+     "felt_state": "the moment after a long cry", "track_count": 16, "curator_count": 13},
+    {"id": "maximalist-mania", "name": "maximalist mania", "color": "#FF4D00",
+     "description": "too much, on purpose. joy as overload.",
+     "felt_state": "seventeen tabs open and you mean it", "track_count": 9, "curator_count": 12},
+    {"id": "dying-light", "name": "dying light", "color": "#5C5C5C",
+     "description": "the slow goodbye. ambient grief.",
+     "felt_state": "watching the last warmth leave the window", "track_count": 13, "curator_count": 18},
+    {"id": "survivor", "name": "survivor", "color": "#DA9100",
+     "description": "made it through. shaky, but standing.",
+     "felt_state": "the morning after the worst night", "track_count": 21, "curator_count": 26},
+]
+
+LORE = [
+    {"id": "blonde-blond-name", "track_id": "nikes", "album_id": "blonde", "title": "Why is the album called Blonde when the cover says Blond?",
+     "author": "ivy-archivist", "depth": "deep", "votes": 412, "comments": 87,
+     "excerpt": "Frank shipped a record with two spellings. The masculine 'Blond' on the cover, the feminine 'Blonde' in the metadata. This is not a typo. It is the whole album in one decision.",
+     "body": """On the cover: BLOND. On Apple Music: Blonde. On the vinyl spine: Blond. On the inside booklet: Blonde, occasionally.
+
+The duality is the thesis. Frank's writing on this record refuses to settle a single self. 'Nikes' opens with two voices — one pitched up to femme, the body shifting mid-line. 'Self Control' has him singing to a man, with women humming behind him. The whole record is a hall of mirrors where pronouns slip and the speaker is sometimes plural.
+
+Blond / Blonde is not a typo. It is the album telling you, before you press play, that no one in here is just one thing."""},
+    {"id": "tpab-poem", "track_id": "mortal-man", "album_id": "to-pimp-a-butterfly", "title": "The Poem, line by line",
+     "author": "compton-cartographer", "depth": "deep", "votes": 689, "comments": 142,
+     "excerpt": "Kendrick recites a poem across the entire album, adding lines as the record progresses. By the end, he reads the whole thing to Tupac.",
+     "body": "He starts with a single line on 'For Free?'. Adds a line on 'King Kunta'. Adds another on 'Institutionalized'. The poem grows the way he is growing. By the time he reaches Mortal Man, the full poem is the record, and the record is a letter to a ghost who never answers."},
+    {"id": "ivy-cover-art", "track_id": "ivy", "album_id": "blonde", "title": "The car on the cover is a 1991 Acura NSX, photographed by a 19-year-old in a green wig",
+     "author": "frank-files", "depth": "community", "votes": 278, "comments": 41,
+     "excerpt": "The image is by Wolfgang Tillmans. The car is in a Tokyo garage. Frank's reasoning, paraphrased: 'I wanted the cover to feel like a memory, not an event.'",
+     "body": "Tillmans shot the green-wig portrait in Hamburg. The car shot, lesser known, was used for promo. The choice of NSX is deliberate — it's a car for a specific kind of nostalgia, a teenage poster fantasy in 1991. The album, recall, is a record about teenagers becoming adults and what they keep."},
+    {"id": "doom-mask", "track_id": None, "album_id": None, "title": "The mask is not a costume",
+     "author": "villain-scholar", "depth": "deep", "votes": 901, "comments": 188,
+     "excerpt": "MF DOOM wore the mask because Daniel Dumile was killed, in a sense, when his brother died in 1993. The mask is a refusal of the music industry that ate him alive once already.",
+     "body": "Read Operation: Doomsday as an origin myth. Read every verse after as a villain who refuses to be a person again on industry terms. The mask is the thesis: the work, not the face. Several rappers performed shows in the mask, with his blessing. DOOM was always a character anyone could become. The villain is a position, not a person."},
+    {"id": "igor-suit", "track_id": "earfquake", "album_id": "igor", "title": "The blonde wig and the pastel suit are armor, not aesthetics",
+     "author": "tyler-tessellation", "depth": "community", "votes": 156, "comments": 28,
+     "excerpt": "Tyler designed IGOR as a character he could hide inside while telling the most vulnerable record of his career.",
+     "body": "Every Tyler album invents a new costume. Bastard had the masks, Wolf had the bucket hat, Flower Boy had the bee. IGOR is the most extreme: a whole stranger to sing 'I think I'm falling in love' in. The persona is the permission slip."},
+    {"id": "videotape-clicks", "track_id": "videotape", "album_id": "in-rainbows", "title": "The clicks at the end are not glitches",
+     "author": "rainbow-reader", "depth": "deep", "votes": 234, "comments": 52,
+     "excerpt": "The percussion that fragments at the end of 'Videotape' is the song dying with the narrator. Listen on headphones in the dark.",
+     "body": "Thom said in interviews this is meant to be the last song you ever hear. The clicks are the tape itself, the medium giving out. The piano keeps going. The world doesn't."},
+]
+
+THEORIES = [
+    {"id": "blonde-is-about-time", "title": "Blonde is an album about time, not love", "track_id": None, "album_id": "blonde",
+     "author": "ivy-archivist", "stance": "deep read", "supporters": 142, "challengers": 38, "replies": 87,
+     "abstract": "Everyone reads Blonde as a breakup album. It isn't. Every song is about the same person at different ages. The romantic loss is the cover story for the real one: who you were at 17 is dead, and you're the one who killed him."},
+    {"id": "kendrick-is-the-caterpillar", "title": "Kendrick is the caterpillar, not the butterfly", "track_id": None, "album_id": "to-pimp-a-butterfly",
+     "author": "compton-cartographer", "stance": "close reading", "supporters": 218, "challengers": 71, "replies": 142,
+     "abstract": "The album title implies the butterfly is the goal. But every line in 'Mortal Man' suggests Kendrick believes he's still the caterpillar — and that the butterfly was Tupac, the one who got out of the cocoon first and was killed for it."},
+    {"id": "in-rainbows-marriage-record", "title": "In Rainbows is the only Radiohead record about staying", "track_id": None, "album_id": "in-rainbows",
+     "author": "rainbow-reader", "stance": "perspective", "supporters": 89, "challengers": 12, "replies": 33,
+     "abstract": "Every other Radiohead album is about leaving — society, the planet, the self. In Rainbows is about staying in a long, complicated love. The warmth of the record is the warmth of a room you've decided not to leave."},
+    {"id": "hyperpop-is-emo", "title": "Hyperpop is just emo at 1.5x speed with the lights on", "track_id": None, "album_id": None,
+     "author": "pcm-anon", "stance": "hot take", "supporters": 76, "challengers": 91, "replies": 64,
+     "abstract": "Strip 100 gecs down to their lyrics and chord progressions. They're writing 2005 MySpace songs. The maximalist production is a confession technique, not a contradiction of the genre's roots."},
+]
+
+CONNECTIONS = [
+    {"source": "nikes", "target": "self-control", "type": "album-sibling", "weight": 1.0},
+    {"source": "self-control", "target": "nights", "type": "album-sibling", "weight": 1.0},
+    {"source": "nikes", "target": "earfquake", "type": "vibe-cousin", "weight": 0.7, "vibe": "pink-heartbreak"},
+    {"source": "self-control", "target": "the-weekend", "type": "vibe-cousin", "weight": 0.8, "vibe": "longing-loop"},
+    {"source": "alright", "target": "u", "type": "album-sibling", "weight": 1.0},
+    {"source": "u", "target": "mirror-confrontation", "type": "vibe-anchor", "weight": 0.9},
+    {"source": "weird-fishes", "target": "videotape", "type": "album-sibling", "weight": 1.0},
+    {"source": "videotape", "target": "self-control", "type": "lyrical-twin", "weight": 0.6},
+    {"source": "the-weekend", "target": "earfquake", "type": "vibe-cousin", "weight": 0.7},
+    {"source": "money-machine", "target": "earfquake", "type": "production-lineage", "weight": 0.5},
+    {"source": "nights", "target": "weird-fishes", "type": "vibe-cousin", "weight": 0.6, "vibe": "underwater-clarity"},
+    {"source": "alright", "target": "the-weekend", "type": "scene-overlap", "weight": 0.4},
+]
+
+SAMPLE_CHAINS = [
+    {"id": "nikes-sample-1", "track_id": "nikes", "source_artist": "Aphex Twin", "source_track": "Cock/Ver10 (chopped)",
+     "year": 2001, "notes": "the pitched-up vocal hook in the opening is a flip of a synth pattern from Drukqs."},
+    {"id": "alright-pharrell", "track_id": "alright", "source_artist": "Pharrell drum kit (custom)", "source_track": "TPAB sessions",
+     "year": 2015, "notes": "Pharrell's drum programming sits underneath Sounwave's keys."},
+]
+
+TRANSITIONS = [
+    {"id": "blonde-self-control-to-good-guy", "from_track": "self-control", "to_track": "good-guy", "album_id": "blonde",
+     "type": "tonal-pivot", "notes": "from full chest-singing to a 1:06 fragment — like a chapter break mid-sentence. listen on shuffle and you lose the whole record."},
+    {"id": "tpab-u-to-alright", "from_track": "u", "to_track": "alright", "album_id": "to-pimp-a-butterfly",
+     "type": "resurrection", "notes": "the lowest point of the record into the highest. essential to play together."},
+]
+
+CONTRIBUTORS = [
+    {"id": "ivy-archivist", "handle": "ivy.archivist", "name": "ivy", "bio": "blonde / channel orange / boys don't cry zine archive",
+     "depth_score": 89, "lore_count": 31, "theory_count": 12, "joined": "2024-08-14",
+     "scenes": ["alt-r&b", "frank-ocean-extended-universe"], "patron_album": "blonde"},
+    {"id": "compton-cartographer", "handle": "compton.cartographer", "name": "j. west", "bio": "mapping kendrick's nested narratives one bar at a time",
+     "depth_score": 94, "lore_count": 42, "theory_count": 18, "joined": "2024-03-21",
+     "scenes": ["west-coast", "conscious-hip-hop"], "patron_album": "to-pimp-a-butterfly"},
+    {"id": "rainbow-reader", "handle": "rainbow.reader", "name": "k. holloway", "bio": "every radiohead record, twice, with notes",
+     "depth_score": 76, "lore_count": 19, "theory_count": 9, "joined": "2024-11-02",
+     "scenes": ["art-rock"], "patron_album": "in-rainbows"},
+    {"id": "tyler-tessellation", "handle": "tyler.tessellation", "name": "m. arias", "bio": "the costume changes ARE the discography",
+     "depth_score": 68, "lore_count": 22, "theory_count": 7, "joined": "2025-01-09",
+     "scenes": ["alt-rap"], "patron_album": "igor"},
+    {"id": "villain-scholar", "handle": "villain.scholar", "name": "d. okonkwo", "bio": "ALL CAPS WHEN YOU SPELL THE MAN NAME",
+     "depth_score": 91, "lore_count": 38, "theory_count": 14, "joined": "2024-06-30",
+     "scenes": ["abstract-hip-hop"], "patron_album": None},
+]

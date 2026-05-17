@@ -1,0 +1,78 @@
+{
+  "theme": "light",
+  "archetype": "Archetype 3: Pastel & Soft (mutated into Gen-Z Neo-Brutalist Editorial)",
+  "emotional_tone": "Raw, expressive, intellectual, culturally intelligent, intimate, atmospheric",
+  "typography": {
+    "heading_font": "Cabinet Grotesk",
+    "body_font": "Cormorant Garamond",
+    "mono_font": "IBM Plex Mono",
+    "scale": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl tracking-tighter font-black",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl tracking-tight font-bold",
+      "h3": "text-xl sm:text-2xl font-bold",
+      "body": "text-base leading-relaxed",
+      "metadata": "text-xs tracking-[0.2em] uppercase font-mono"
+    },
+    "font_install_instructions": "Add Cabinet Grotesk from Fontshare or local assets. Add Cormorant Garamond and IBM Plex Mono via Google Fonts."
+  },
+  "colors": {
+    "background": {
+      "base": "#F4F0EA",
+      "surface": "#FFFFFF",
+      "muted": "#EBE7E0",
+      "dark_surface": "#111111"
+    },
+    "text": {
+      "primary": "#111111",
+      "secondary": "#555555",
+      "inverse": "#F4F0EA",
+      "accent": "#FF1493"
+    },
+    "border": {
+      "default": "#111111",
+      "light": "rgba(17,17,17,0.1)"
+    },
+    "accents": {
+      "hyperpop_pink": "#FF1493",
+      "acid_green": "#CCFF00",
+      "chrome_blue": "#0055FF"
+    }
+  },
+  "surfaces_and_borders": {
+    "cards": "Neo-brutalist style. rounded-none or very subtle rounded-sm. 2px solid #111111 border. Hard drop shadow: shadow-[4px_4px_0px_0px_rgba(17,17,17,1)].",
+    "buttons": "Solid fill with 2px ink borders. On hover: translate-x-[2px] translate-y-[2px] shadow-none.",
+    "header": "Sticky glassmorphism: backdrop-blur-xl bg-[#F4F0EA]/80 border-b-2 border-[#111111].",
+    "inputs": "Shadcn inputs heavily customized: rounded-none, border-2 border-[#111111], focus:ring-0 focus:border-[#FF1493]."
+  },
+  "spacing_and_layout": {
+    "philosophy": "Generous spacing. Asymmetrical grid layouts for Explore. Editorial reading widths (max-w-prose) for Lore pages.",
+    "containers": "Use p-8 or p-12 for major section containers. Cards must have p-6.",
+    "grids": "Use 'bento' grid mode for Explore pages. Leave empty cells for negative space. Grid children must be direct elements."
+  },
+  "components": {
+    "connection_map": "Use react-force-graph-2d or react-force-graph-3d. Nodes should use accent colors (Acid Green, Hyperpop Pink). Background transparent to blend with parchment base.",
+    "lore_entries": "Editorial layout. Drop caps on first letter. Wide margins. Use Cormorant Garamond for body text, interspersed with large abstract pull-quotes in Cabinet Grotesk.",
+    "album_universe": "Immersive page. For this section only, invert the theme to dark mode (base: #111111, text: #F4F0EA) to feel like 'stepping into' a different world.",
+    "marquee": "Use react-fast-marquee. Editorial Ribbon style: Slow drift, uppercase mono font, massive letter spacing."
+  },
+  "motion_and_interactions": {
+    "hover_states": "Hard brutalist physical button press (translate 2px down/right, remove shadow).",
+    "page_transitions": "Snappy and immediate. No sluggish fades.",
+    "scroll": "Implement Lenis for smooth momentum scrolling to add a premium editorial feel."
+  },
+  "media": {
+    "image_urls": {},
+    "notes": "Image generation and stock APIs failed due to quota/provider limits. DO NOT use placeholder images. Instead, use pure CSS elements: deep noise gradients, large typographic lockups, and CSS-based grid lines to create visual interest. For album covers or artist shots, use CSS colored blocks (e.g., bg-[#FF1493] mixed with mix-blend-multiply) with heavy typography inside."
+  },
+  "accessibility_and_testing": {
+    "contrast": "Ensure all text on parchment meets APCA guidelines. Ink (#111111) on Parchment (#F4F0EA) has excellent contrast.",
+    "testing": "All interactive elements MUST include data-testid attributes (e.g., data-testid='explore-vibe-cluster-link')."
+  },
+  "instructions_to_main_agent": [
+    "Install required libraries: lenis (for smooth scroll), framer-motion, react-force-graph-2d, lucide-react.",
+    "Do NOT use standard Shadcn borders/shadows. Override all Shadcn components (cards, dialogs, inputs) to use rounded-none, 2px solid borders, and hard brutalist shadows (shadow-[4px_4px_0px_0px_#111111]).",
+    "For the Connection Map interface, implement a functional node graph where clicking a node navigates to a Track, Album, or Lore page.",
+    "Do not build a typical audio player or feed. The UI must feel like a Wiki + Are.na + Editorial Magazine.",
+    "Since images could not be fetched, rely entirely on high-contrast typography, CSS noise textures (using SVG filters or CSS backgrounds), and sharp geometric shapes."
+  ]
+}
