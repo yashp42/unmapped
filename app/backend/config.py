@@ -30,7 +30,7 @@ class Settings:
         if origin.strip()
     ]
 
-    PUBLIC_API_URL: str = os.environ.get("PUBLIC_API_URL", "http://127.0.0.1:8000").rstrip("/")
+    PUBLIC_API_URL: str = os.environ.get("PUBLIC_API_URL", "http://127.0.0.1:8001").rstrip("/")
     MAX_UPLOAD_MB: int = int(os.environ.get("MAX_UPLOAD_MB", "5"))
 
     CLOUDINARY_CLOUD_NAME: str | None = os.environ.get("CLOUDINARY_CLOUD_NAME")

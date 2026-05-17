@@ -8,15 +8,23 @@ import SaveButton from "../components/SaveButton";
 
 export default function AlbumUniverse() {
   const { id } = useParams();
-  const [d, setD] = useState(null);
-  const [actionLoading, setActionLoading] = useState(false);
-  useEffect(() => { api.get(`/albums/${id}`).then((r) => setD(r.data)); }, [id]);
-  if (!d) return <div className="max-w-3xl mx-auto px-6 py-20 meta-ink">opening universe…</div>;
-  const { album, artist, tracks, lore, theories, transitions } = d;
   const { user, refreshUser } = useAuth();
   const navigate = useNavigate();
+  const [d, setD] = useState(null);
+  const [actionLoading, setActionLoading] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [form, setForm] = useState({ title: album.title, universe_tagline: album.universe_tagline });
+  const [form, setForm] = useState({ title: "", universe_tagline: "" });
+  useEffect(() => { api.get(`/albums/${id}`).then((r) => setD(r.data)); }, [id]);
+  useEffect(() => {
+    if (!d?.album) return;
+    setForm({
+      title: d.album.title || "",
+      universe_tagline: d.album.universe_tagline || "",
+    });
+  }, [d]);
+  if (!d) return <div className="max-w-3xl mx-auto px-6 py-20 meta-ink">opening universe…</div>;
+  const { album, artist, tracks = [], lore = [], theories = [], transitions = [] } = d;
+  const motifs = Array.isArray(album?.motifs) ? album.motifs : [];
 
   return (
     <div className="dark-universe min-h-screen">
@@ -56,7 +64,7 @@ export default function AlbumUniverse() {
               </div>
             )}
             <div className="flex flex-wrap gap-2 mt-6">
-              {album.motifs.map((m) => <span key={m} className="tag-chip">{m}</span>)}
+              {motifs.map((m) => <span key={m} className="tag-chip">{m}</span>)}
             </div>
           </div>
           <div className="lg:col-span-5">

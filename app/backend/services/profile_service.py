@@ -1,30 +1,30 @@
 from typing import Any, Optional
 
-from ..database.connection import db
+from database.connection import get_database
 from .user_service import enrich_user, find_user_by_handle
 
 
 async def find_contributor_by_handle(handle: str) -> Optional[dict]:
-    return await db.contributors.find_one({"handle": handle}, {"_id": 0})
+    return await get_database().contributors.find_one({"handle": handle}, {"_id": 0})
 
 
 async def find_contributor_by_id(contributor_id: str) -> Optional[dict]:
-    return await db.contributors.find_one({"id": contributor_id}, {"_id": 0})
+    return await get_database().contributors.find_one({"id": contributor_id}, {"_id": 0})
 
 
 async def _fetch_contributions(author_keys: set[str]) -> tuple[list[dict], list[dict]]:
     if not author_keys:
         return [], []
     query = {"$or": [{"author": {"$in": list(author_keys)}}, {"user_id": {"$in": list(author_keys)}}]}
-    lore = await db.lore.find(query, {"_id": 0}).sort("votes", -1).limit(30).to_list(length=30)
-    theories = await db.theories.find(query, {"_id": 0}).sort("supporters", -1).limit(30).to_list(length=30)
+    lore = await get_database().lore.find(query, {"_id": 0}).sort("votes", -1).limit(30).to_list(length=30)
+    theories = await get_database().theories.find(query, {"_id": 0}).sort("supporters", -1).limit(30).to_list(length=30)
     return lore, theories
 
 
 async def _resolve_artists(artist_ids: list[str]) -> list[dict]:
     if not artist_ids:
         return []
-    return await db.artists.find({"id": {"$in": artist_ids}}, {"_id": 0}).to_list(length=50)
+    return await get_database().artists.find({"id": {"$in": artist_ids}}, {"_id": 0}).to_list(length=50)
 
 
 async def _resolve_saved(user: dict) -> dict[str, list[dict]]:
@@ -33,9 +33,9 @@ async def _resolve_saved(user: dict) -> dict[str, list[dict]]:
     albums = []
     tracks = []
     if album_ids:
-        albums = await db.albums.find({"id": {"$in": album_ids}}, {"_id": 0}).to_list(length=100)
+        albums = await get_database().albums.find({"id": {"$in": album_ids}}, {"_id": 0}).to_list(length=100)
     if track_ids:
-        tracks = await db.tracks.find({"id": {"$in": track_ids}}, {"_id": 0}).to_list(length=100)
+        tracks = await get_database().tracks.find({"id": {"$in": track_ids}}, {"_id": 0}).to_list(length=100)
     return {"saved_albums": albums, "saved_tracks": tracks}
 
 

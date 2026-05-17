@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Query
-from ..database.connection import db
+from database.connection import get_database
 from ..schemas.search import SearchResults
 
 router = APIRouter()
@@ -7,7 +7,7 @@ router = APIRouter()
 
 async def lookup(collection_name: str, term: str, fields: list[str]) -> list[dict]:
     query = {"$or": [{field: {"$regex": term, "$options": "i"}} for field in fields]}
-    return await db[collection_name].find(query).limit(20).to_list(length=20)
+    return await get_database()[collection_name].find(query).limit(20).to_list(length=20)
 
 
 @router.get("", response_model=SearchResults)

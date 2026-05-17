@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from fastapi import HTTPException, status
 
-from ..database.connection import db
+from database.connection import get_database
 from ..schemas.comments import CommentCreate
 from .user_service import enrich_user
 
@@ -16,7 +16,7 @@ TARGET_COLLECTIONS = {
 
 async def _ensure_target_exists(target_type: str, target_id: str) -> None:
     collection, _ = TARGET_COLLECTIONS[target_type]
-    doc = await db[collection].find_one({"id": target_id}, {"_id": 0, "id": 1})
+    doc = await get_database()[collection].find_one({"id": target_id}, {"_id": 0, "id": 1})
     if not doc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contribution not found")
 
@@ -24,7 +24,7 @@ async def _ensure_target_exists(target_type: str, target_id: str) -> None:
 async def list_comments(target_type: str, target_id: str, limit: int = 50) -> list[dict]:
     await _ensure_target_exists(target_type, target_id)
     cursor = (
-        db.comments.find({"target_type": target_type, "target_id": target_id}, {"_id": 0})
+        get_database().comments.find({"target_type": target_type, "target_id": target_id}, {"_id": 0})
         .sort("created_at", 1)
         .limit(limit)
     )
@@ -47,10 +47,10 @@ async def create_comment(payload: CommentCreate, user: dict) -> dict:
         "body": payload.body.strip(),
         "created_at": now,
     }
-    await db.comments.insert_one(doc)
+    await get_database().comments.insert_one(doc)
 
     collection, count_field = TARGET_COLLECTIONS[payload.target_type]
-    await db[collection].update_one(
+    await get_database()[collection].update_one(
         {"id": payload.target_id},
         {"$inc": {count_field: 1}},
     )
@@ -60,6 +60,6 @@ async def create_comment(payload: CommentCreate, user: dict) -> dict:
 
 
 async def get_comment_count(target_type: str, target_id: str) -> int:
-    return await db.comments.count_documents(
+    return await get_database().comments.count_documents(
         {"target_type": target_type, "target_id": target_id}
     )

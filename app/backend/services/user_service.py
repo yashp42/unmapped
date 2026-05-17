@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any, Optional
 
-from ..database.connection import db
+from database.connection import get_database
 from ..utils.security import hash_password, verify_password
 
 DEFAULT_PROFILE_FIELDS = {
@@ -26,10 +26,10 @@ def _display_name(user: dict) -> str:
 
 async def count_user_contributions(user_id: str, handle: str) -> tuple[int, int]:
     author_keys = {user_id, handle}
-    lore_count = await db.lore.count_documents({"author": {"$in": list(author_keys)}})
-    theory_count = await db.theories.count_documents({"author": {"$in": list(author_keys)}})
-    user_lore = await db.lore.count_documents({"user_id": user_id})
-    user_theory = await db.theories.count_documents({"user_id": user_id})
+    lore_count = await get_database().lore.count_documents({"author": {"$in": list(author_keys)}})
+    theory_count = await get_database().theories.count_documents({"author": {"$in": list(author_keys)}})
+    user_lore = await get_database().lore.count_documents({"user_id": user_id})
+    user_theory = await get_database().theories.count_documents({"user_id": user_id})
     return max(lore_count, user_lore), max(theory_count, user_theory)
 
 
@@ -79,15 +79,21 @@ async def enrich_user(user: dict | None, include_private: bool = False) -> Optio
 
 
 async def find_user_by_email(email: str) -> Optional[dict]:
-    return await db.users.find_one({"email": email})
+    db = get_database()
+    users_collection = db["users"]
+    return await users_collection.find_one({"email": email})
 
 
 async def find_user_by_handle(handle: str) -> Optional[dict]:
-    return await db.users.find_one({"handle": handle.lower().strip()})
+    db = get_database()
+    users_collection = db["users"]
+    return await users_collection.find_one({"handle": handle.lower().strip()})
 
 
 async def find_user_by_id(user_id: str) -> Optional[dict]:
-    return await db.users.find_one({"id": user_id})
+    db = get_database()
+    users_collection = db["users"]
+    return await users_collection.find_one({"id": user_id})
 
 
 async def create_user(data: dict) -> dict:
@@ -104,7 +110,9 @@ async def create_user(data: dict) -> dict:
         "display_name": data.get("display_name"),
         "bio": data.get("bio", ""),
     }
-    await db.users.insert_one(payload)
+    db = get_database()
+    users_collection = db["users"]
+    await users_collection.insert_one(payload)
     return await enrich_user(payload, include_private=True)  # type: ignore[return-value]
 
 
@@ -119,13 +127,17 @@ async def authenticate_user(email: str, password: str) -> Optional[dict]:
 
 async def update_user(user_id: str, updates: dict) -> Optional[dict]:
     updates["updated_at"] = datetime.utcnow().isoformat()
-    await db.users.update_one({"id": user_id}, {"$set": updates})
+    db = get_database()
+    users_collection = db["users"]
+    await users_collection.update_one({"id": user_id}, {"$set": updates})
     user = await find_user_by_id(user_id)
     return await enrich_user(user, include_private=True)
 
 
 async def list_users(skip: int = 0, limit: int = 20) -> list[dict]:
-    cursor = db.users.find({}, {"_id": 0, "password_hash": 0}).skip(skip).limit(limit).sort("created_at", -1)
+    db = get_database()
+    users_collection = db["users"]
+    cursor = users_collection.find({}, {"_id": 0, "password_hash": 0}).skip(skip).limit(limit).sort("created_at", -1)
     users = await cursor.to_list(length=limit)
     result = []
     for user in users:

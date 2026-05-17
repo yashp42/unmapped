@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from fastapi import HTTPException, status
 
-from ..database.connection import db
+from database.connection import get_database
 from ..schemas.lore import LoreCreate
 
 
@@ -16,11 +16,11 @@ def _excerpt_from_body(body: str, excerpt: str | None) -> str:
 
 async def create_lore_entry(payload: LoreCreate, user: dict) -> dict:
     if payload.album_id:
-        album = await db.albums.find_one({"id": payload.album_id}, {"_id": 0, "id": 1})
+        album = await get_database().albums.find_one({"id": payload.album_id}, {"_id": 0, "id": 1})
         if not album:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Album not found")
     if payload.track_id:
-        track = await db.tracks.find_one({"id": payload.track_id}, {"_id": 0, "id": 1})
+        track = await get_database().tracks.find_one({"id": payload.track_id}, {"_id": 0, "id": 1})
         if not track:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Track not found")
 
@@ -40,15 +40,15 @@ async def create_lore_entry(payload: LoreCreate, user: dict) -> dict:
         "created_at": now,
         "updated_at": now,
     }
-    await db.lore.insert_one(doc)
+    await get_database().lore.insert_one(doc)
     doc.pop("_id", None)
     return doc
 
 
 async def get_lore_with_meta(lore_id: str) -> dict | None:
-    lore = await db.lore.find_one({"id": lore_id}, {"_id": 0})
+    lore = await get_database().lore.find_one({"id": lore_id}, {"_id": 0})
     if not lore:
         return None
-    comment_count = await db.comments.count_documents({"target_type": "lore", "target_id": lore_id})
+    comment_count = await get_database().comments.count_documents({"target_type": "lore", "target_id": lore_id})
     lore["comments"] = max(lore.get("comments", 0), comment_count)
     return lore

@@ -1,6 +1,6 @@
 from typing import Any, Optional
 
-from ..database.connection import db
+from database.connection import get_database
 
 
 async def build_connection_graph(track_id: Optional[str] = None) -> dict[str, list[dict[str, Any]]]:
@@ -8,7 +8,7 @@ async def build_connection_graph(track_id: Optional[str] = None) -> dict[str, li
     if track_id:
         query = {"$or": [{"source": track_id}, {"target": track_id}]}
 
-    edges = await db.connections.find(query, {"_id": 0}).to_list(length=500)
+    edges = await get_database().connections.find(query, {"_id": 0}).to_list(length=500)
     if not edges:
         return {"nodes": [], "edges": []}
 
@@ -17,7 +17,7 @@ async def build_connection_graph(track_id: Optional[str] = None) -> dict[str, li
         track_ids.add(edge["source"])
         track_ids.add(edge["target"])
 
-    tracks = await db.tracks.find({"id": {"$in": list(track_ids)}}, {"_id": 0}).to_list(length=500)
+    tracks = await get_database().tracks.find({"id": {"$in": list(track_ids)}}, {"_id": 0}).to_list(length=500)
     track_map = {t["id"]: t for t in tracks}
 
     nodes = []

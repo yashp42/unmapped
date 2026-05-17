@@ -89,7 +89,7 @@ app.mount(
 
 @app.get("/api/health")
 async def health():
-    from .database.connection import db
+    from database.connection import get_database
 
-    await db.command("ping")
+    await get_database().command("ping")
     return {"status": "ok", "database": settings.DB_NAME}

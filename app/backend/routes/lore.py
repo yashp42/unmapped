@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from typing import List
 
-from ..database.connection import db
+from database.connection import get_database
 from ..dependencies import get_current_user
 from ..schemas.lore import LoreCreate, LoreOut
 from ..services.lore_service import create_lore_entry, get_lore_with_meta
@@ -11,7 +11,7 @@ router = APIRouter()
 
 @router.get("", response_model=List[LoreOut])
 async def list_lore(skip: int = Query(0, ge=0), limit: int = Query(20, ge=1, le=100)):
-    cursor = db.lore.find({}, {"_id": 0}).sort("created_at", -1).skip(skip).limit(limit)
+    cursor = get_database().lore.find({}, {"_id": 0}).sort("created_at", -1).skip(skip).limit(limit)
     return await cursor.to_list(length=limit)
 
 

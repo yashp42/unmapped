@@ -2,7 +2,7 @@ import logging
 from datetime import datetime
 
 from .config import settings
-from .database.connection import db
+from database.connection import get_database
 from .services.user_service import create_user, find_user_by_email
 from .seed_data import (
     ARTISTS,
@@ -21,11 +21,11 @@ logger = logging.getLogger("unmapped.seed")
 
 
 async def seed_collection(name: str, documents: list[dict]):
-    count = await db[name].count_documents({})
+    count = await get_database()[name].count_documents({})
     if count > 0:
         return
     if documents:
-        await db[name].insert_many(documents)
+        await get_database()[name].insert_many(documents)
         logger.info("Seeded %s with %d documents", name, len(documents))
 
 
