@@ -14,7 +14,6 @@ from .routes import (
     albums,
     artists,
     tracks,
-    vibes,
     lore,
     theories,
     contributors,
@@ -24,6 +23,7 @@ from .routes import (
     users,
     connections,
     comments,
+    admin,
 )
 from .seed import seed_database
 
@@ -70,7 +70,6 @@ app.include_router(users.router, prefix="/api/users", tags=["users"])
 app.include_router(albums.router, prefix="/api/albums", tags=["albums"])
 app.include_router(artists.router, prefix="/api/artists", tags=["artists"])
 app.include_router(tracks.router, prefix="/api/tracks", tags=["tracks"])
-app.include_router(vibes.router, prefix="/api/vibes", tags=["vibes"])
 app.include_router(lore.router, prefix="/api/lore", tags=["lore"])
 app.include_router(theories.router, prefix="/api/theories", tags=["theories"])
 app.include_router(contributors.router, prefix="/api/contributors", tags=["contributors"])
@@ -79,6 +78,7 @@ app.include_router(search.router, prefix="/api/search", tags=["search"])
 app.include_router(portal.router, prefix="/api/explore/portal", tags=["explore"])
 app.include_router(connections.router, prefix="/api/connections", tags=["connections"])
 app.include_router(comments.router, prefix="/api/comments", tags=["comments"])
+app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
 
 app.mount(
     "/api/media/avatars",

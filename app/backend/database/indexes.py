@@ -8,6 +8,7 @@ async def create_indexes():
     users_collection = db["users"]
     await users_collection.create_index("email", unique=True)
     await users_collection.create_index("handle", unique=True)
+    await users_collection.create_index("role")
 
     # Artists
     await get_database().artists.create_index("id", unique=True)
@@ -20,10 +21,6 @@ async def create_indexes():
     # Tracks
     await get_database().tracks.create_index("id", unique=True)
     await get_database().tracks.create_index([("title", "text"), ("artist_name", "text")], name="tracks_text")
-
-    # Vibes
-    await get_database().vibes.create_index("id", unique=True)
-    await get_database().vibes.create_index([("name", "text"), ("felt_state", "text")], name="vibes_text")
 
     # Lore
     await get_database().lore.create_index("id", unique=True)
@@ -43,6 +40,10 @@ async def create_indexes():
 
     # Graph / archive metadata
     await get_database().connections.create_index([("source", 1), ("target", 1)])
+    await get_database().connections.create_index("type")
+    await get_database().relationships.create_index([("source_id", 1), ("target_id", 1), ("type", 1)])
+    await get_database().relationships.create_index("source_type")
+    await get_database().relationships.create_index("target_type")
     await get_database().sample_chains.create_index("track_id")
     await get_database().transitions.create_index("album_id")
     await get_database().lore.create_index("album_id")
@@ -57,3 +58,8 @@ async def create_indexes():
     # Comments
     await get_database().comments.create_index([("target_type", 1), ("target_id", 1), ("created_at", 1)])
     await get_database().comments.create_index("user_id")
+
+    # Annotations
+    await get_database().annotations.create_index([("target_type", 1), ("target_id", 1), ("created_at", 1)])
+    await get_database().annotations.create_index("user_id")
+    await get_database().annotations.create_index("status")

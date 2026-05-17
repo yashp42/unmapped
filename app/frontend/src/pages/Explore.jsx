@@ -9,16 +9,15 @@ export default function Explore() {
   const [tab, setTab] = useState("albums");
   const [albums, setAlbums] = useState([]);
   const [artists, setArtists] = useState([]);
-  const [vibes, setVibes] = useState([]);
   const [tracks, setTracks] = useState([]);
   const { user } = useAuth();
   const [actionLoadingId, setActionLoadingId] = useState(null);
   useEffect(() => {
-    Promise.all([api.get("/albums"), api.get("/artists"), api.get("/vibes"), api.get("/tracks")])
-      .then(([a, ar, v, t]) => { setAlbums(a.data); setArtists(ar.data); setVibes(v.data); setTracks(t.data); });
+    Promise.all([api.get("/albums"), api.get("/artists"), api.get("/tracks")])
+      .then(([a, ar, t]) => { setAlbums(a.data); setArtists(ar.data); setTracks(t.data); });
   }, []);
 
-  const tabs = [{ id: "albums", label: "Album Universes" }, { id: "artists", label: "Artists" }, { id: "vibes", label: "Vibe Clusters" }, { id: "tracks", label: "Tracks" }];
+  const tabs = [{ id: "albums", label: "Album Universes" }, { id: "artists", label: "Artists" }, { id: "tracks", label: "Tracks" }];
 
   return (
     <div className="max-w-[1480px] mx-auto px-6 py-12">
@@ -68,18 +67,6 @@ export default function Explore() {
                 </div>
               )}
             </div>
-          ))}
-        </div>
-      )}
-
-      {tab === "vibes" && (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
-          {vibes.map((v) => (
-            <Link key={v.id} to={`/vibe/${v.id}`} className="brutal-card p-6 relative" style={{ background: v.color }} data-testid={`vibe-card-${v.id}`}>
-              <div className="font-display font-black text-2xl lowercase tracking-tighter mix-blend-multiply">{v.name}</div>
-              <p className="font-editorial italic text-lg mt-2 mix-blend-multiply">{v.description}</p>
-              <div className="meta-ink mt-4 mix-blend-multiply">{v.track_count} tracks · {v.curator_count} curators</div>
-            </Link>
           ))}
         </div>
       )}

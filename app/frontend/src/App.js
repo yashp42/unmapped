@@ -3,13 +3,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./lib/auth";
 import AppShell from "./layouts/AppShell";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
 import Home from "./pages/Home";
 import Explore from "./pages/Explore";
 import TrackPage from "./pages/TrackPage";
 import AlbumUniverse from "./pages/AlbumUniverse";
 import ConnectionMap from "./pages/ConnectionMap";
-import VibesIndex from "./pages/VibesIndex";
-import VibePage from "./pages/VibePage";
 import LoreIndex from "./pages/LoreIndex";
 import LoreEntry from "./pages/LoreEntry";
 import TheoriesIndex from "./pages/TheoriesIndex";
@@ -20,6 +19,7 @@ import MyWorld from "./pages/MyWorld";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import SearchPage from "./pages/SearchPage";
+import AdminCMS from "./pages/AdminCMS";
 
 export default function App() {
   return (
@@ -31,8 +31,6 @@ export default function App() {
           <Route path="/track/:id" element={<AppShell><TrackPage /></AppShell>} />
           <Route path="/album/:id" element={<AppShell><AlbumUniverse /></AppShell>} />
           <Route path="/connections" element={<AppShell><ConnectionMap /></AppShell>} />
-          <Route path="/vibes" element={<AppShell><VibesIndex /></AppShell>} />
-          <Route path="/vibe/:id" element={<AppShell><VibePage /></AppShell>} />
           <Route path="/lore" element={<AppShell><LoreIndex /></AppShell>} />
           <Route path="/lore/:id" element={<AppShell><LoreEntry /></AppShell>} />
           <Route path="/theories" element={<AppShell><TheoriesIndex /></AppShell>} />
@@ -46,6 +44,16 @@ export default function App() {
                 <ProtectedRoute>
                   <MyWorld />
                 </ProtectedRoute>
+              </AppShell>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <AppShell>
+                <AdminRoute>
+                  <AdminCMS />
+                </AdminRoute>
               </AppShell>
             }
           />

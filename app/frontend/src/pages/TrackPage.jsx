@@ -9,16 +9,19 @@ import SaveButton from "../components/SaveButton";
 
 export default function TrackPage() {
   const { id } = useParams();
+  const { user, refreshUser } = useAuth();
+  const navigate = useNavigate();
   const [depth, setDepth] = useState("casual");
   const [data, setData] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
-  useEffect(() => { api.get(`/tracks/${id}`).then((r) => setData(r.data)); }, [id]);
-  if (!data) return <div className="max-w-3xl mx-auto px-6 py-20 meta-ink">loading…</div>;
-  const { track, artist, album, lore, samples, vibes, connected_tracks } = data;
-  const { user, refreshUser } = useAuth();
-  const navigate = useNavigate();
   const [editing, setEditing] = useState(false);
-  const [title, setTitle] = useState(track.title);
+  const [title, setTitle] = useState("");
+  useEffect(() => { api.get(`/tracks/${id}`).then((r) => setData(r.data)); }, [id]);
+  useEffect(() => {
+    if (data?.track?.title) setTitle(data.track.title);
+  }, [data]);
+  if (!data) return <div className="max-w-3xl mx-auto px-6 py-20 meta-ink">loading…</div>;
+  const { track, artist, album, lore, samples, connected_tracks } = data;
 
   return (
     <div className="max-w-[1480px] mx-auto px-6 py-12">
@@ -104,16 +107,6 @@ export default function TrackPage() {
         </div>
 
         <aside className="lg:col-span-4 space-y-5">
-          <div className="brutal-card-static p-5">
-            <div className="meta-ink mb-2">vibes</div>
-            <div className="flex flex-wrap gap-2">
-              {vibes.map((v) => (
-                <Link key={v.id} to={`/vibe/${v.id}`} className="tag-chip" style={{background:v.color}} data-testid={`track-vibe-${v.id}`}>
-                  {v.name}
-                </Link>
-              ))}
-            </div>
-          </div>
           {samples.length > 0 && (
             <div className="brutal-card-static p-5">
               <div className="meta-ink mb-2">sample genealogy</div>

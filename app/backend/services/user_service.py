@@ -53,6 +53,7 @@ async def enrich_user(user: dict | None, include_private: bool = False) -> Optio
     public = {
         "id": user["id"],
         "handle": user["handle"],
+        "role": user.get("role", "user"),
         "display_name": user["display_name"],
         "bio": user.get("bio") or "",
         "avatar_url": user.get("avatar_url"),
@@ -103,6 +104,7 @@ async def create_user(data: dict) -> dict:
         "email": data["email"],
         "handle": data["handle"],
         "password_hash": hash_password(data["password"]),
+        "role": data.get("role", "user"),
         "depth_score": data.get("depth_score", 0),
         "created_at": now,
         "updated_at": now,

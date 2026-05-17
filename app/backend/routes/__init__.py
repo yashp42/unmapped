@@ -1,1 +1,1 @@
-from . import auth, albums, artists, tracks, vibes, lore, theories, contributors, collections, search, portal, users
+from . import admin, auth, albums, artists, tracks, lore, theories, contributors, collections, search, portal, users

@@ -68,7 +68,7 @@ export default function ConnectionMap() {
 
       <div className="mt-6 flex flex-wrap gap-3">
         <div className="meta-ink mr-2">edge types →</div>
-        {[["album-sibling", "track lives in same record"], ["vibe-cousin", "shares a felt state"], ["lyrical-twin", "rhymes the same idea"], ["production-lineage", "shares producer DNA"], ["scene-overlap", "same room, different night"]].map(([t, d]) => (
+        {[["album-sibling", "track lives in same record"], ["mood-cousin", "shares an emotional texture"], ["lyrical-twin", "rhymes the same idea"], ["production-lineage", "shares producer DNA"], ["scene-overlap", "same room, different night"]].map(([t, d]) => (
           <span key={t} className="tag-chip"><strong>{t}</strong> · {d}</span>
         ))}
       </div>

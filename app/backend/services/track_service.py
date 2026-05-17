@@ -14,11 +14,6 @@ async def get_track_detail(track_id: str) -> Optional[dict[str, Any]]:
     lore = await get_database().lore.find({"track_id": track_id}, {"_id": 0}).sort("votes", -1).to_list(length=20)
     samples = await get_database().sample_chains.find({"track_id": track_id}, {"_id": 0}).to_list(length=20)
 
-    vibe_ids = track.get("vibe_ids") or []
-    vibes = []
-    if vibe_ids:
-        vibes = await get_database().vibes.find({"id": {"$in": vibe_ids}}, {"_id": 0}).to_list(length=20)
-
     edges = await get_database().connections.find(
         {"$or": [{"source": track_id}, {"target": track_id}]},
         {"_id": 0},
@@ -40,6 +35,5 @@ async def get_track_detail(track_id: str) -> Optional[dict[str, Any]]:
         "album": album,
         "lore": lore,
         "samples": samples,
-        "vibes": vibes,
         "connected_tracks": connected_tracks,
     }

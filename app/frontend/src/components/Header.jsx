@@ -5,7 +5,6 @@ import { useState } from "react";
 
 const navItems = [
   { to: "/explore", label: "Explore" },
-  { to: "/vibes", label: "Vibes" },
   { to: "/connections", label: "Connection Map" },
   { to: "/lore", label: "Lore" },
   { to: "/theories", label: "Theories" },
@@ -44,6 +43,9 @@ export default function Header() {
         {user ? (
           <div className="flex items-center gap-2">
             <Link to="/my-world" className="brutal-btn invert !py-1.5 !px-3 text-sm" data-testid="my-world-link"><User size={14} />{user.handle}</Link>
+            {user.role === "admin" && (
+              <Link to="/admin" className="brutal-btn accent !py-1.5 !px-3 text-sm" data-testid="admin-link">admin</Link>
+            )}
             <button onClick={logout} className="brutal-btn !py-1.5 !px-3 text-sm" data-testid="logout-btn"><LogOut size={14} /></button>
           </div>
         ) : (

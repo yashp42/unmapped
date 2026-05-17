@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../lib/api";
 import Marquee from "../components/Marquee";
-import { ArrowUpRight, Compass, Network, BookOpen, Sparkles } from "lucide-react";
+import { ArrowUpRight, Compass, Network, BookOpen } from "lucide-react";
 
 export default function Home() {
   const [data, setData] = useState(null);
@@ -28,7 +28,6 @@ export default function Home() {
             <div className="flex flex-wrap gap-3 mt-8">
               <Link to="/explore" className="brutal-btn" data-testid="hero-cta-explore"><Compass size={16}/>enter the archive</Link>
               <Link to="/connections" className="brutal-btn acid" data-testid="hero-cta-map"><Network size={16}/>open the map</Link>
-              <Link to="/vibes" className="brutal-btn invert" data-testid="hero-cta-vibes"><Sparkles size={16}/>search by feeling</Link>
             </div>
           </div>
           <aside className="lg:col-span-4">
@@ -44,7 +43,6 @@ export default function Home() {
             <div className="mt-6 grid grid-cols-2 gap-3">
               <div className="brutal-card-static p-4"><div className="meta-ink">scenes</div><div className="font-display font-black text-3xl mt-1">9</div></div>
               <div className="brutal-card-static p-4 bg-[var(--hyperpop)] text-white"><div className="meta-ink !text-white/80">lore entries</div><div className="font-display font-black text-3xl mt-1">{(d.rabbit_holes || []).length * 27 + 142}</div></div>
-              <div className="brutal-card-static p-4 bg-[var(--acid)]"><div className="meta-ink">vibes</div><div className="font-display font-black text-3xl mt-1">{(d.vibes || []).length}</div></div>
               <div className="brutal-card-static p-4"><div className="meta-ink">curators</div><div className="font-display font-black text-3xl mt-1">{(d.contributors || []).length}+</div></div>
             </div>
           </aside>
@@ -76,22 +74,6 @@ export default function Home() {
           ))}
         </div>
       </section>
-
-      {/* VIBES STRIP */}
-      <section className="max-w-[1480px] mx-auto px-6 mt-20">
-        <div className="meta-ink mb-2">felt states · search by feeling</div>
-        <h2 className="font-display font-black text-4xl md:text-5xl tracking-tighter mb-6">the moods that don't have names yet.</h2>
-        <div className="flex flex-wrap gap-3">
-          {(d.vibes || []).map((v) => (
-            <Link key={v.id} to={`/vibe/${v.id}`} className="brutal-card-static px-4 py-3 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition"
-              style={{ background: v.color }} data-testid={`vibe-chip-${v.id}`}>
-              <div className="font-display font-bold text-lg lowercase mix-blend-multiply">{v.name}</div>
-              <div className="font-editorial italic text-sm mix-blend-multiply">{v.felt_state}</div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
       {/* FEATURED ALBUM */}
       {d.featured_album && (
         <section className="max-w-[1480px] mx-auto px-6 mt-20">

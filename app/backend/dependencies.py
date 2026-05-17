@@ -2,6 +2,7 @@ from typing import Optional
 
 from fastapi import Depends, HTTPException, Request, status
 
+from .core.roles import UserRole, has_minimum_role
 from .utils.security import decode_token
 from .services.user_service import find_user_by_id
 
@@ -49,3 +50,19 @@ async def get_optional_user(request: Request) -> Optional[dict]:
         return await get_current_user(request)
     except HTTPException:
         return None
+
+
+def require_role(required_role: UserRole):
+    async def dependency(current_user: dict = Depends(get_current_user)) -> dict:
+        if not has_minimum_role(current_user.get("role"), required_role):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"{required_role.value} role required",
+            )
+        return current_user
+
+    return dependency
+
+
+require_admin = require_role(UserRole.ADMIN)
+require_contributor = require_role(UserRole.CONTRIBUTOR)

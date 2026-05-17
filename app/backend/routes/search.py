@@ -7,7 +7,7 @@ router = APIRouter()
 
 async def lookup(collection_name: str, term: str, fields: list[str]) -> list[dict]:
     query = {"$or": [{field: {"$regex": term, "$options": "i"}} for field in fields]}
-    return await get_database()[collection_name].find(query).limit(20).to_list(length=20)
+    return await get_database()[collection_name].find(query, {"_id": 0}).limit(20).to_list(length=20)
 
 
 @router.get("", response_model=SearchResults)
@@ -17,6 +17,5 @@ async def search(q: str = Query(..., min_length=1)):
         tracks=await lookup("tracks", term, ["title", "artist_name"]),
         albums=await lookup("albums", term, ["title", "artist_name"]),
         artists=await lookup("artists", term, ["name"]),
-        vibes=await lookup("vibes", term, ["name", "felt_state"]),
         lore=await lookup("lore", term, ["title", "excerpt", "body"]),
     )

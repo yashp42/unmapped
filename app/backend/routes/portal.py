@@ -10,7 +10,6 @@ async def portal():
     rabbit_holes = (
         await get_database().lore.find({}, {"_id": 0}).sort("created_at", -1).limit(5).to_list(length=5)
     )
-    vibes = await get_database().vibes.find({}, {"_id": 0}).sort("name", 1).limit(8).to_list(length=8)
     featured_album = await get_database().albums.find_one({"featured": True}, {"_id": 0})
     theories = await get_database().theories.find({}, {"_id": 0}).sort("supporters", -1).limit(3).to_list(length=3)
     contributors = (
@@ -18,7 +17,6 @@ async def portal():
     )
     return {
         "rabbit_holes": rabbit_holes,
-        "vibes": vibes,
         "featured_album": featured_album,
         "theories": theories,
         "contributors": contributors,

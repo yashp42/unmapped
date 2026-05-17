@@ -8,7 +8,6 @@ from .seed_data import (
     ARTISTS,
     ALBUMS,
     TRACKS,
-    VIBES,
     LORE,
     THEORIES,
     CONTRIBUTORS,
@@ -33,7 +32,6 @@ async def seed_database() -> None:
     await seed_collection("artists", ARTISTS)
     await seed_collection("albums", ALBUMS)
     await seed_collection("tracks", TRACKS)
-    await seed_collection("vibes", VIBES)
     await seed_collection("lore", LORE)
     await seed_collection("theories", THEORIES)
     await seed_collection("contributors", CONTRIBUTORS)
@@ -42,13 +40,20 @@ async def seed_database() -> None:
     await seed_collection("transitions", TRANSITIONS)
 
     admin_email = settings.ADMIN_EMAIL.lower().strip()
-    if not await find_user_by_email(admin_email):
+    existing_admin = await find_user_by_email(admin_email)
+    if not existing_admin:
         await create_user({
             "id": "admin",
             "email": admin_email,
             "handle": settings.ADMIN_HANDLE,
             "password": settings.ADMIN_PASSWORD,
+            "role": "admin",
             "bio": "Platform administrator.",
             "depth_score": 9999,
         })
         logger.info("Created default admin user %s", admin_email)
+    elif existing_admin.get("role") != "admin":
+        db = get_database()
+        users_collection = db["users"]
+        await users_collection.update_one({"email": admin_email}, {"$set": {"role": "admin"}})
+        logger.info("Promoted default admin user %s", admin_email)

@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 class UserPublic(BaseModel):
     id: str
     handle: str
+    role: str = "user"
     display_name: str | None = None
     bio: str | None = None
     avatar_url: str | None = None
