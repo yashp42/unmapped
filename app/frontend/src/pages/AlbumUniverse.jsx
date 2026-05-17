@@ -1,22 +1,60 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { api } from "../lib/api";
+import { useAuth } from "../lib/auth";
+import { toast } from "sonner";
+import LoadingSpinner from "../components/LoadingSpinner";
+import SaveButton from "../components/SaveButton";
 
 export default function AlbumUniverse() {
   const { id } = useParams();
   const [d, setD] = useState(null);
+  const [actionLoading, setActionLoading] = useState(false);
   useEffect(() => { api.get(`/albums/${id}`).then((r) => setD(r.data)); }, [id]);
   if (!d) return <div className="max-w-3xl mx-auto px-6 py-20 meta-ink">opening universe…</div>;
   const { album, artist, tracks, lore, theories, transitions } = d;
+  const { user, refreshUser } = useAuth();
+  const navigate = useNavigate();
+  const [editing, setEditing] = useState(false);
+  const [form, setForm] = useState({ title: album.title, universe_tagline: album.universe_tagline });
 
   return (
     <div className="dark-universe min-h-screen">
       <div className="max-w-[1480px] mx-auto px-6 py-14">
         <div className="grid lg:grid-cols-12 gap-8 items-end">
           <div className="lg:col-span-7">
-            <div className="meta mb-3" data-testid="album-universe-meta">universe · {album.year} · {artist.name}</div>
-            <h1 className="font-display font-black text-7xl md:text-9xl tracking-tighter leading-[0.85]">{album.title}</h1>
-            <p className="font-editorial italic text-2xl md:text-3xl mt-5">{album.universe_tagline}</p>
+            <div className="meta mb-3" data-testid="album-universe-meta">universe · {album.year} · {artist?.name || album.artist_id}</div>
+            {user && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                <SaveButton
+                  type="album"
+                  id={album.id}
+                  saved={user.saved_album_ids?.includes(album.id)}
+                  onToggle={() => refreshUser()}
+                />
+                <button className="brutal-btn" onClick={() => setEditing((s) => !s)} disabled={actionLoading} data-testid="edit-album">{editing? 'Cancel':'Edit'}</button>
+                <button className="brutal-btn" onClick={async () => { if (!confirm('Delete this album?')) return; setActionLoading(true); try { await api.delete(`/albums/${album.id}`); toast.success('deleted'); navigate('/'); } catch (e) { toast.error('delete failed'); } finally { setActionLoading(false); } }} disabled={actionLoading} data-testid="delete-album">
+                  {actionLoading ? <><LoadingSpinner size={16} /> <span className="ml-2">Deleting</span></> : 'Delete'}
+                </button>
+              </div>
+            )}
+            {!editing ? (
+              <>
+                <h1 className="font-display font-black text-7xl md:text-9xl tracking-tighter leading-[0.85]">{album.title}</h1>
+                <p className="font-editorial italic text-2xl md:text-3xl mt-5">{album.universe_tagline}</p>
+              </>
+            ) : (
+              <div className="space-y-3">
+                <input className="input" value={form.title} onChange={(e)=>setForm({...form, title:e.target.value})} />
+                <input className="input" value={form.universe_tagline||''} onChange={(e)=>setForm({...form, universe_tagline:e.target.value})} />
+                <div className="flex gap-2">
+                  <button className="brutal-btn" onClick={async ()=>{ setActionLoading(true); try { await api.put(`/albums/${album.id}`, { title: form.title, universe_tagline: form.universe_tagline }); const r = await api.get(`/albums/${album.id}`); setD(r.data); setEditing(false); toast.success('saved'); } catch (e) { toast.error('save failed'); } finally { setActionLoading(false); } }} data-testid="save-album" disabled={actionLoading}>
+                    {actionLoading ? <><LoadingSpinner size={16} /> <span className="ml-2">Saving</span></> : 'Save'}
+                  </button>
+                  <button className="brutal-btn" onClick={()=>setEditing(false)} disabled={actionLoading}>Cancel</button>
+                </div>
+              </div>
+            )}
             <div className="flex flex-wrap gap-2 mt-6">
               {album.motifs.map((m) => <span key={m} className="tag-chip">{m}</span>)}
             </div>
@@ -100,3 +138,4 @@ export default function AlbumUniverse() {
     </div>
   );
 }
+

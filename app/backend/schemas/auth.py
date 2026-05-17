@@ -1,17 +1,18 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, Field
 
 
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
+    refresh_token: str | None = None
 
 
 class LoginPayload(BaseModel):
-    email: EmailStr
+    email: str
     password: str
 
 
 class RegisterPayload(BaseModel):
-    email: EmailStr
+    email: str
     handle: str = Field(..., min_length=3, max_length=32)
     password: str = Field(..., min_length=8)

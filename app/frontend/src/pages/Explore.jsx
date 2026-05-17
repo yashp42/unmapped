@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../lib/api";
+import { useAuth } from "../lib/auth";
+import { toast } from "sonner";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function Explore() {
   const [tab, setTab] = useState("albums");
@@ -8,6 +11,8 @@ export default function Explore() {
   const [artists, setArtists] = useState([]);
   const [vibes, setVibes] = useState([]);
   const [tracks, setTracks] = useState([]);
+  const { user } = useAuth();
+  const [actionLoadingId, setActionLoadingId] = useState(null);
   useEffect(() => {
     Promise.all([api.get("/albums"), api.get("/artists"), api.get("/vibes"), api.get("/tracks")])
       .then(([a, ar, v, t]) => { setAlbums(a.data); setArtists(ar.data); setVibes(v.data); setTracks(t.data); });
@@ -51,11 +56,17 @@ export default function Explore() {
 
       {tab === "artists" && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
-          {artists.map((a) => (
+              {artists.map((a) => (
             <div key={a.id} className="brutal-card-static p-6" data-testid={`artist-card-${a.id}`}>
               <div className="meta-ink">{a.scene} · {a.era}</div>
               <div className="font-display font-black text-3xl tracking-tighter mt-2">{a.name}</div>
               <p className="font-editorial italic text-lg mt-2">{a.tagline}</p>
+              {user && (
+                <div className="mt-3 flex gap-2">
+                      <button className="brutal-btn" onClick={async ()=>{ const newName = prompt('name', a.name); if(!newName) return; setActionLoadingId(a.id); try{ await api.put(`/artists/${a.id}`, { name: newName }); const r = await api.get('/artists'); setArtists(r.data); toast.success('updated'); } catch(e){ toast.error('update failed'); } finally { setActionLoadingId(null); } }} disabled={actionLoadingId!==null && actionLoadingId!==a.id}>{actionLoadingId===a.id ? <><LoadingSpinner size={16} className="inline-block"/> <span className="ml-2">Saving</span></> : 'Edit'}</button>
+                      <button className="brutal-btn" onClick={async ()=>{ if(!confirm('Delete artist?')) return; setActionLoadingId(a.id); try{ await api.delete(`/artists/${a.id}`); setArtists((s)=>s.filter(x=>x.id!==a.id)); toast.success('deleted'); } catch(e){ toast.error('delete failed'); } finally { setActionLoadingId(null); } }} disabled={actionLoadingId!==null && actionLoadingId!==a.id}>{actionLoadingId===a.id ? <><LoadingSpinner size={16} className="inline-block"/> <span className="ml-2">Deleting</span></> : 'Delete'}</button>
+                </div>
+              )}
             </div>
           ))}
         </div>

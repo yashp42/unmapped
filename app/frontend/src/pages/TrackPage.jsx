@@ -1,15 +1,24 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { api } from "../lib/api";
 import { ArrowRight, Quote } from "lucide-react";
+import { useAuth } from "../lib/auth";
+import { toast } from "sonner";
+import LoadingSpinner from "../components/LoadingSpinner";
+import SaveButton from "../components/SaveButton";
 
 export default function TrackPage() {
   const { id } = useParams();
   const [depth, setDepth] = useState("casual");
   const [data, setData] = useState(null);
+  const [actionLoading, setActionLoading] = useState(false);
   useEffect(() => { api.get(`/tracks/${id}`).then((r) => setData(r.data)); }, [id]);
   if (!data) return <div className="max-w-3xl mx-auto px-6 py-20 meta-ink">loading…</div>;
   const { track, artist, album, lore, samples, vibes, connected_tracks } = data;
+  const { user, refreshUser } = useAuth();
+  const navigate = useNavigate();
+  const [editing, setEditing] = useState(false);
+  const [title, setTitle] = useState(track.title);
 
   return (
     <div className="max-w-[1480px] mx-auto px-6 py-12">
@@ -17,6 +26,28 @@ export default function TrackPage() {
         <div className="lg:col-span-8">
           <div className="meta-ink mb-2">track · {String(album?.tracks?.indexOf(track.id)+1 || 1).padStart(2,'0')} / {album?.tracks?.length || 1}</div>
           <h1 className="font-display font-black text-5xl md:text-7xl tracking-tighter">{track.title}</h1>
+          {user && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              <SaveButton
+                type="track"
+                id={track.id}
+                saved={user.saved_track_ids?.includes(track.id)}
+                onToggle={() => refreshUser()}
+              />
+              <button className="brutal-btn" onClick={()=>setEditing((s)=>!s)} disabled={actionLoading}>{editing ? 'Cancel' : 'Edit'}</button>
+              <button className="brutal-btn" onClick={async ()=>{ if(!confirm('Delete this track?')) return; setActionLoading(true); try { await api.delete(`/tracks/${track.id}`); toast.success('deleted'); navigate(`/album/${album.id}`); } catch(e){ toast.error('delete failed'); } finally { setActionLoading(false); } }} disabled={actionLoading}>
+                {actionLoading ? <><LoadingSpinner size={16} /> <span className="ml-2">Deleting</span></> : 'Delete'}
+              </button>
+            </div>
+          )}
+          {editing && (
+            <div className="mt-3 flex gap-2">
+              <input className="input" value={title} onChange={(e)=>setTitle(e.target.value)} />
+              <button className="brutal-btn" onClick={async ()=>{ setActionLoading(true); try { await api.put(`/tracks/${track.id}`, { title }); const r = await api.get(`/tracks/${track.id}`); setData(r.data); setEditing(false); toast.success('saved'); } catch(e){ toast.error('save failed'); } finally { setActionLoading(false); } }} disabled={actionLoading}>
+                {actionLoading ? <><LoadingSpinner size={16} /> <span className="ml-2">Saving</span></> : 'Save'}
+              </button>
+            </div>
+          )}
           <div className="mt-3 flex flex-wrap items-center gap-3">
             <Link to={`/album/${album.id}`} className="font-editorial italic text-2xl underline underline-offset-4">{album.title}</Link>
             <span className="meta-ink">/</span>

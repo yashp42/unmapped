@@ -1,10 +1,29 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../lib/api";
+import { useAuth } from "../lib/auth";
+import { toast } from "sonner";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function ContributorsIndex() {
   const [c, setC] = useState([]);
+  const { user } = useAuth();
+  const [loadingId, setLoadingId] = useState(null);
   useEffect(() => { api.get("/contributors").then((r) => setC(r.data)); }, []);
+
+  const remove = async (id) => {
+    if (!confirm('Delete contributor?')) return;
+    setLoadingId(id);
+    try {
+      await api.delete(`/contributors/${id}`);
+      setC((s)=>s.filter(x=>x.id!==id));
+      toast.success('deleted');
+    } catch(e) {
+      toast.error('delete failed');
+    } finally {
+      setLoadingId(null);
+    }
+  };
   return (
     <div className="max-w-[1480px] mx-auto px-6 py-12">
       <div className="meta-ink mb-3">section 06 · the keepers</div>
@@ -24,6 +43,16 @@ export default function ContributorsIndex() {
             <div className="flex gap-2 mt-4">
               <span className="tag-chip">{x.lore_count} lore</span>
               <span className="tag-chip">{x.theory_count} theories</span>
+              {user && (
+                <div className="ml-auto flex gap-2">
+                  <button className="brutal-btn" onClick={async (e)=>{ e.preventDefault(); const name = prompt('name', x.name); if (!name) return; setLoadingId(x.id); try { await api.put(`/contributors/${x.id}`, { name }); setC((s)=>s.map(it=>it.id===x.id?{...it,name}:it)); toast.success('updated'); } catch(e){ toast.error('update failed'); } finally { setLoadingId(null); } }} disabled={loadingId!==null && loadingId!==x.id}>
+                    {loadingId===x.id ? <><LoadingSpinner size={16} /> <span className="ml-2">Saving</span></> : 'Edit'}
+                  </button>
+                  <button className="brutal-btn" onClick={async (e)=>{ e.preventDefault(); await remove(x.id); }} disabled={loadingId!==null && loadingId!==x.id}>
+                    {loadingId===x.id ? <><LoadingSpinner size={16} /> <span className="ml-2">Deleting</span></> : 'Delete'}
+                  </button>
+                </div>
+              )}
             </div>
           </Link>
         ))}

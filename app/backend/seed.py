@@ -4,7 +4,18 @@ from datetime import datetime
 from .config import settings
 from .database.connection import db
 from .services.user_service import create_user, find_user_by_email
-from .seed_data import ARTISTS, ALBUMS, TRACKS, VIBES, LORE, THEORIES, CONTRIBUTORS
+from .seed_data import (
+    ARTISTS,
+    ALBUMS,
+    TRACKS,
+    VIBES,
+    LORE,
+    THEORIES,
+    CONTRIBUTORS,
+    CONNECTIONS,
+    SAMPLE_CHAINS,
+    TRANSITIONS,
+)
 
 logger = logging.getLogger("unmapped.seed")
 
@@ -26,6 +37,9 @@ async def seed_database() -> None:
     await seed_collection("lore", LORE)
     await seed_collection("theories", THEORIES)
     await seed_collection("contributors", CONTRIBUTORS)
+    await seed_collection("connections", CONNECTIONS)
+    await seed_collection("sample_chains", SAMPLE_CHAINS)
+    await seed_collection("transitions", TRANSITIONS)
 
     admin_email = settings.ADMIN_EMAIL.lower().strip()
     if not await find_user_by_email(admin_email):

@@ -18,5 +18,5 @@ async def search(q: str = Query(..., min_length=1)):
         albums=await lookup("albums", term, ["title", "artist_name"]),
         artists=await lookup("artists", term, ["name"]),
         vibes=await lookup("vibes", term, ["name", "felt_state"]),
-        lore=await lookup("lore", term, ["title", "excerpt", "content"]),
+        lore=await lookup("lore", term, ["title", "excerpt", "body"]),
     )

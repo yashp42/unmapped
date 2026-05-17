@@ -41,7 +41,7 @@ export default function Header() {
             <button type="submit" className="brutal-btn !py-2 !px-3 -ml-[2px]" data-testid="header-search-submit"><Search size={16} /></button>
           </div>
         </form>
-        {user && user !== false ? (
+        {user ? (
           <div className="flex items-center gap-2">
             <Link to="/my-world" className="brutal-btn invert !py-1.5 !px-3 text-sm" data-testid="my-world-link"><User size={14} />{user.handle}</Link>
             <button onClick={logout} className="brutal-btn !py-1.5 !px-3 text-sm" data-testid="logout-btn"><LogOut size={14} /></button>
