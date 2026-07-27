@@ -13,18 +13,10 @@ services:
     environment:
       MONGO_URL: mongodb://mongo:27017
       CORS_ORIGINS: http://localhost:3000
+      PUBLIC_API_URL: http://localhost:8000
     depends_on:
       - mongo
     ports:
-      - "8001:8001"
-  frontend:
-    build:
-      context: app/frontend
-      args:
-        REACT_APP_BACKEND_URL: http://localhost:8001
-    depends_on:
-      - backend
-    ports:
-      - "3000:80"
+      - "8000:8000"
 volumes:
   mongo_data:
