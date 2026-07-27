@@ -4,10 +4,10 @@ from datetime import datetime, timezone
 from uuid import uuid4
 from fastapi import APIRouter, Query, Depends, HTTPException
 
-from services.connection_service import build_connection_graph, find_connection_path
-from dependencies import require_admin, require_contributor
-from schemas.relationships import RelationshipCreate
-from database.connection import get_database
+from ..services.connection_service import build_connection_graph, find_connection_path
+from ..dependencies import require_admin, require_contributor
+from ..schemas.relationships import RelationshipCreate
+from ..database.connection import get_database
 
 router = APIRouter()
 

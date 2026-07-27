@@ -14,8 +14,8 @@ from urllib.parse import quote
 
 import requests
 
-from database.connection import get_database
-from services.catalog_identity import persist_catalog_entities
+from ..database.connection import get_database
+from .catalog_identity import persist_catalog_entities
 
 ITUNES_URL = "https://itunes.apple.com/search"
 MUSICBRAINZ_URL = "https://musicbrainz.org/ws/2/release-group"

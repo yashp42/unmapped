@@ -2,9 +2,9 @@ from datetime import datetime, timezone
 from uuid import uuid4
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
-from dependencies import get_current_user, require_admin
-from database.connection import get_database
-from services.audit_service import audit
+from ..dependencies import get_current_user, require_admin
+from ..database.connection import get_database
+from ..services.audit_service import audit
 
 router = APIRouter()
 class ReportIn(BaseModel):

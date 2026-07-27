@@ -1,5 +1,5 @@
 import asyncio
-from database.connection import get_database
+from ..database.connection import get_database
 
 async def contributor_trust(user_id: str) -> dict:
     """Explainable trust signals; never used as an opaque ranking algorithm."""

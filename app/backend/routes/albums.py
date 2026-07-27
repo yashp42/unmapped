@@ -4,10 +4,10 @@ from uuid import uuid4
 from fastapi import APIRouter, Depends, HTTPException, status, Query, Response
 from typing import List
 
-from database.connection import get_database
-from dependencies import require_admin
-from schemas.albums import Album, AlbumIn, AlbumUpdate
-from services.album_service import get_album_universe
+from ..database.connection import get_database
+from ..dependencies import get_current_user, require_admin
+from ..schemas.albums import Album, AlbumIn, AlbumUpdate
+from ..services.album_service import get_album_universe
 
 router = APIRouter()
 

@@ -1,7 +1,7 @@
 from typing import Any, Optional
 from collections import deque
 
-from database.connection import get_database
+from ..database.connection import get_database
 
 
 async def build_connection_graph(track_id: Optional[str] = None, edge_types: Optional[list[str]] = None) -> dict[str, list[dict[str, Any]]]:

@@ -1,10 +1,10 @@
 from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
-from dependencies import require_admin
-from database.connection import get_database
-from services.audit_service import audit
-from services.revision_service import snapshot
+from ..dependencies import require_admin
+from ..database.connection import get_database
+from ..services.audit_service import audit
+from ..services.revision_service import snapshot
 
 router = APIRouter(dependencies=[Depends(require_admin)])
 COLLECTIONS = {"lore": "lore", "theory": "theories"}

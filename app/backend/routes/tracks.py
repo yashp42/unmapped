@@ -4,9 +4,9 @@ from uuid import uuid4
 from fastapi import APIRouter, Depends, HTTPException, status, Query, Response
 from typing import List
 
-from dependencies import require_admin
-from schemas.tracks import Track, TrackIn, TrackUpdate
-from services.track_service import get_track_detail
+from ..dependencies import require_admin
+from ..schemas.tracks import Track, TrackIn, TrackUpdate
+from ..services.track_service import get_track_detail
 
 router = APIRouter()
 

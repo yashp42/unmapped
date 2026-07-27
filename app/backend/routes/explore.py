@@ -1,8 +1,8 @@
 import asyncio
 from fastapi import APIRouter, HTTPException, Query
 
-from database.connection import get_database
-from services.music_catalog_service import enrich_album, enrich_artist, enrich_track, explore_catalog, live_search
+from ..database.connection import get_database
+from ..services.music_catalog_service import enrich_album, enrich_artist, enrich_track, explore_catalog, live_search
 
 router = APIRouter()
 

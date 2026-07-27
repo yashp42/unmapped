@@ -2,13 +2,13 @@ from datetime import datetime
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query
-from dependencies import get_current_user, get_optional_user
-from database.connection import get_database
+from ..dependencies import get_current_user, get_optional_user
+from ..database.connection import get_database
 from typing import List
-from schemas.theories import Theory, TheoryCreate
-from services.submission_guard import allow_submission
-from services.audit_service import audit
-from services.revision_service import snapshot
+from ..schemas.theories import Theory, TheoryCreate
+from ..services.submission_guard import allow_submission
+from ..services.audit_service import audit
+from ..services.revision_service import snapshot
 
 router = APIRouter()
 

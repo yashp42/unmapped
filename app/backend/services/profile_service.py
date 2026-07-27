@@ -1,6 +1,6 @@
 from typing import Any, Optional
 
-from database.connection import get_database
+from ..database.connection import get_database
 from .user_service import enrich_user, find_user_by_handle
 
 

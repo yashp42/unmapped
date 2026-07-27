@@ -1,19 +1,19 @@
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 
-from dependencies import get_current_user, get_optional_user
-from schemas.users import ProfileUpdate, SaveToggleResponse, UserPrivate, UserPublic
-from services.profile_service import get_profile_by_handle
-from services.profile_service import _resolve_saved
-from services.upload_service import upload_avatar
-from services.trust_service import contributor_trust
-from services.user_service import (
+from ..dependencies import get_current_user, get_optional_user
+from ..schemas.users import ProfileUpdate, SaveToggleResponse, UserPrivate, UserPublic
+from ..services.profile_service import get_profile_by_handle
+from ..services.profile_service import _resolve_saved
+from ..services.upload_service import upload_avatar
+from ..services.trust_service import contributor_trust
+from ..services.user_service import (
     enrich_user,
     list_users,
     toggle_saved_album,
     toggle_saved_track,
     update_user,
 )
-from database.connection import get_database
+from ..database.connection import get_database
 
 router = APIRouter()
 

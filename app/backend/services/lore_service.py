@@ -3,11 +3,11 @@ from uuid import uuid4
 
 from fastapi import HTTPException, status
 
-from database.connection import get_database
-from schemas.lore import LoreCreate
-from services.submission_guard import allow_submission
-from services.audit_service import audit
-from services.revision_service import snapshot
+from ..database.connection import get_database
+from ..schemas.lore import LoreCreate
+from .submission_guard import allow_submission
+from .audit_service import audit
+from .revision_service import snapshot
 
 
 def _excerpt_from_body(body: str, excerpt: str | None) -> str:

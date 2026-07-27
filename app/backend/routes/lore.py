@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from typing import List
 
-from database.connection import get_database
-from dependencies import get_current_user, get_optional_user
-from schemas.lore import LoreCreate, LoreOut
-from services.lore_service import create_lore_entry, get_lore_with_meta
+from ..database.connection import get_database
+from ..dependencies import get_current_user, get_optional_user
+from ..schemas.lore import LoreCreate, LoreOut
+from ..services.lore_service import create_lore_entry, get_lore_with_meta
 
 router = APIRouter()
 

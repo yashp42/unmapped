@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, status, Query, Depends, Response
 from typing import List
 
-from dependencies import require_admin, require_contributor
-from repositories.contributors import contributors_repository
-from schemas.contributors import Contributor, ContributorIn, ContributorUpdate
+from ..dependencies import require_admin, require_contributor
+from ..repositories.contributors import contributors_repository
+from ..schemas.contributors import Contributor, ContributorIn, ContributorUpdate
 
 router = APIRouter()
 

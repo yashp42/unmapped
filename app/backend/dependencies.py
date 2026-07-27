@@ -2,9 +2,9 @@ from typing import Optional
 
 from fastapi import Depends, HTTPException, Request, status
 
-from core.roles import UserRole, has_minimum_role
-from utils.security import decode_token
-from services.user_service import find_user_by_id
+from .core.roles import UserRole, has_minimum_role
+from .utils.security import decode_token
+from .services.user_service import find_user_by_id
 
 
 def _extract_token(request: Request) -> Optional[str]:

@@ -1,7 +1,7 @@
 from typing import Any, Optional
 
-from database.connection import get_database
-from services.music_catalog_service import enrich_track
+from ..database.connection import get_database
+from .music_catalog_service import enrich_track
 
 
 async def get_track_detail(track_id: str) -> Optional[dict[str, Any]]:

@@ -3,9 +3,9 @@ from uuid import uuid4
 
 from fastapi import APIRouter, HTTPException, status, Query, Depends, Response
 from typing import List
-from database.connection import get_database
-from schemas.artists import Artist, ArtistIn, ArtistUpdate
-from dependencies import require_admin
+from ..database.connection import get_database
+from ..schemas.artists import Artist, ArtistIn, ArtistUpdate
+from ..dependencies import require_admin
 
 router = APIRouter()
 

@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException
-from database.connection import get_database
-from dependencies import get_current_user, get_optional_user
+from ..database.connection import get_database
+from ..dependencies import get_current_user, get_optional_user
 
 router = APIRouter()
 VALID_TARGETS = {"lore", "theory", "connection"}

@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from database.connection import get_database
+from ..database.connection import get_database
 
 async def snapshot(content_type: str, document: dict, actor_id: str | None, reason: str) -> str:
     revision_id = f"{document['id']}:{datetime.now(timezone.utc).timestamp():.6f}"

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Query
-from database.connection import get_database
-from schemas.search import SearchResults
+from ..database.connection import get_database
+from ..schemas.search import SearchResults
 
 router = APIRouter()
 

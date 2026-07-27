@@ -5,11 +5,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from backend.config import settings, UPLOAD_DIR
-from database.connection import close_database, connect_database
-from database.indexes import create_indexes
-from middleware.errors import register_exception_handlers
-from routes import (
+from .config import settings, UPLOAD_DIR
+from .database.connection import close_database, connect_database
+from .database.indexes import create_indexes
+from .middleware.errors import register_exception_handlers
+from .routes import (
     auth,
     albums,
     artists,
@@ -29,7 +29,7 @@ from routes import (
     reports,
     moderation,
 )
-from seed import seed_database
+from .seed import seed_database
 
 logging.basicConfig(
     level=logging.INFO,
@@ -97,7 +97,7 @@ app.mount(
 
 @app.get("/api/health")
 async def health():
-    from database.connection import get_database
+    from .database.connection import get_database
 
     await get_database().command("ping")
     return {"status": "ok", "database": settings.DB_NAME}

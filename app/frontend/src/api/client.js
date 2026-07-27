@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE = process.env.REACT_APP_BACKEND_URL || "http://127.0.0.1:8001";
+const BASE = process.env.REACT_APP_BACKEND_URL || "http://127.0.0.1:8000";
 const TOKEN_KEY = "unmapped_access_token";
 
 export const api = axios.create({

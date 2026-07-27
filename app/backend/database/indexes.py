@@ -1,5 +1,5 @@
-from backend.config import settings
-from database.connection import get_database
+from ..config import settings
+from ..database.connection import get_database
 
 
 async def create_indexes():

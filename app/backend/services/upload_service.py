@@ -4,7 +4,7 @@ from pathlib import Path
 
 from fastapi import HTTPException, UploadFile, status
 
-from backend.config import settings, UPLOAD_DIR
+from ..config import settings, UPLOAD_DIR
 
 logger = logging.getLogger("unmapped.upload")
 

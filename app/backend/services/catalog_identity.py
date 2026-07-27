@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from typing import Any
-from database.connection import get_database
-from utils.catalog import catalog_id
+from ..database.connection import get_database
+from ..utils.catalog import catalog_id
 
 async def persist_catalog_entities(items: list[dict[str, Any]], kind: str, provider: str = "itunes") -> None:
     """Persist only normalized metadata, never a provider's complete response."""

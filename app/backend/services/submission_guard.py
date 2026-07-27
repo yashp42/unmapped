@@ -1,7 +1,7 @@
 """Small database-backed posting guard; replace with Redis when traffic warrants it."""
 from datetime import datetime, timedelta, timezone
 from fastapi import HTTPException, status
-from database.connection import get_database
+from ..database.connection import get_database
 
 MAX_POSTS_PER_HOUR = 10
 
