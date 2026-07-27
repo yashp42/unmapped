@@ -4,10 +4,9 @@ from uuid import uuid4
 from fastapi import APIRouter, Depends, HTTPException, status, Query, Response
 from typing import List
 
-from database.connection import get_database
-from ..dependencies import get_current_user
-from ..schemas.tracks import Track, TrackIn, TrackUpdate
-from ..services.track_service import get_track_detail
+from dependencies import require_admin
+from schemas.tracks import Track, TrackIn, TrackUpdate
+from services.track_service import get_track_detail
 
 router = APIRouter()
 
@@ -27,7 +26,7 @@ async def get_track(track_id: str):
 
 
 @router.post("", response_model=Track, status_code=201)
-async def create_track(payload: TrackIn, current_user: dict = Depends(get_current_user)):
+async def create_track(payload: TrackIn, current_user: dict = Depends(require_admin)):
     now = datetime.utcnow().isoformat()
     track = payload.model_dump()
     track.update({"id": str(uuid4()), "created_at": now, "updated_at": now})
@@ -39,7 +38,7 @@ async def create_track(payload: TrackIn, current_user: dict = Depends(get_curren
 async def update_track(
     track_id: str,
     payload: TrackUpdate,
-    current_user: dict = Depends(get_current_user),
+    current_user: dict = Depends(require_admin),
 ):
     track = await get_database().tracks.find_one({"id": track_id}, {"_id": 0})
     if not track:
@@ -55,7 +54,7 @@ async def update_track(
 
 
 @router.delete("/{track_id}", status_code=204)
-async def delete_track(track_id: str, current_user: dict = Depends(get_current_user)):
+async def delete_track(track_id: str, current_user: dict = Depends(require_admin)):
     res = await get_database().tracks.delete_one({"id": track_id})
     if res.deleted_count == 0:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Track not found")

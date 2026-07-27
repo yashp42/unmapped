@@ -28,6 +28,7 @@ export default function MyWorld() {
   const [actionLoading, setActionLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [note, setNote] = useState("");
+  const [trust, setTrust] = useState(null);
 
   useEffect(() => {
     if (location.state?.tab) setTab(location.state.tab);
@@ -37,6 +38,7 @@ export default function MyWorld() {
     if (!user) return;
     api.get("/collections/mine").then((r) => setCollections(r.data));
     fetchMySaves().then((r) => setSaves(r.data));
+    api.get("/users/me/trust").then((r) => setTrust(r.data)).catch(() => {});
     api.get("/artists?limit=50").then((r) => setArtists(r.data)).catch(() => {});
   }, [user]);
 
@@ -103,6 +105,7 @@ export default function MyWorld() {
       <p className="font-editorial italic text-xl mt-3 max-w-2xl">
         collections, saved albums and tracks, and the public face you show the archive.
       </p>
+      {trust && <div className="brutal-card-static inline-flex flex-wrap gap-3 p-4 mt-6"><span className="meta-ink">archive standing</span><span className="font-display font-bold">{trust.level}</span><span className="tag-chip">{trust.published_lore} lore</span><span className="tag-chip">{trust.published_theories} theories</span><span className="tag-chip">{trust.approved_connections} connections</span></div>}
 
       <div className="flex flex-wrap gap-2 mt-8">
         {TABS.map((t) => (

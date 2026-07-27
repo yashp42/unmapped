@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, status, Response
 from uuid import uuid4
 from datetime import datetime
 
-from ..schemas.collections import CollectionCreate, CollectionOut
-from ..dependencies import get_current_user
+from schemas.collections import CollectionCreate, CollectionOut
+from dependencies import get_current_user
 from database.connection import get_database
 
 router = APIRouter()

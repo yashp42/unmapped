@@ -131,6 +131,7 @@ body {
 }
 .dark-universe .meta, .dark-universe .meta-ink { color: rgba(244,240,234,0.7); }
 .dark-universe .tag-chip { border-color: var(--parchment); background: #1a1a1a; color: var(--parchment); }
+.dark-universe .editorial-prose, .dark-universe .font-editorial { color: var(--parchment); }
 
 .grain::before {
   content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.18; mix-blend-mode: multiply;

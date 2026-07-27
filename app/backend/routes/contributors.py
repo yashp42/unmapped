@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, status, Query, Depends, Response
 from typing import List
 
-from ..dependencies import require_contributor
-from ..repositories.contributors import contributors_repository
-from ..schemas.contributors import Contributor, ContributorIn, ContributorUpdate
+from dependencies import require_admin, require_contributor
+from repositories.contributors import contributors_repository
+from schemas.contributors import Contributor, ContributorIn, ContributorUpdate
 
 router = APIRouter()
 
@@ -27,7 +27,7 @@ async def create_contributor(payload: ContributorIn, current_user: dict = Depend
 
 
 @router.put("/{contributor_id}", response_model=Contributor)
-async def update_contributor(contributor_id: str, payload: ContributorUpdate, current_user: dict = Depends(require_contributor)):
+async def update_contributor(contributor_id: str, payload: ContributorUpdate, current_user: dict = Depends(require_admin)):
     contributor = await contributors_repository.get_by_id(contributor_id)
     if not contributor:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contributor not found")
@@ -36,7 +36,7 @@ async def update_contributor(contributor_id: str, payload: ContributorUpdate, cu
 
 
 @router.delete("/{contributor_id}", status_code=204)
-async def delete_contributor(contributor_id: str, current_user: dict = Depends(require_contributor)):
+async def delete_contributor(contributor_id: str, current_user: dict = Depends(require_admin)):
     deleted = await contributors_repository.delete(contributor_id)
     if not deleted:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contributor not found")

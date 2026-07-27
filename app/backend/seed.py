@@ -1,10 +1,10 @@
 import logging
 from datetime import datetime
 
-from .config import settings
+from config import settings
 from database.connection import get_database
-from .services.user_service import create_user, find_user_by_email
-from .seed_data import (
+from services.user_service import create_user, find_user_by_email
+from seed_data import (
     ARTISTS,
     ALBUMS,
     TRACKS,

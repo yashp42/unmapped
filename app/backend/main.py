@@ -5,11 +5,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from .config import settings, UPLOAD_DIR
-from .database.connection import close_database, connect_database
-from .database.indexes import create_indexes
-from .middleware.errors import register_exception_handlers
-from .routes import (
+from backend.config import settings, UPLOAD_DIR
+from database.connection import close_database, connect_database
+from database.indexes import create_indexes
+from middleware.errors import register_exception_handlers
+from routes import (
     auth,
     albums,
     artists,
@@ -24,8 +24,12 @@ from .routes import (
     connections,
     comments,
     admin,
+    explore,
+    reactions,
+    reports,
+    moderation,
 )
-from .seed import seed_database
+from seed import seed_database
 
 logging.basicConfig(
     level=logging.INFO,
@@ -79,6 +83,10 @@ app.include_router(portal.router, prefix="/api/explore/portal", tags=["explore"]
 app.include_router(connections.router, prefix="/api/connections", tags=["connections"])
 app.include_router(comments.router, prefix="/api/comments", tags=["comments"])
 app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
+app.include_router(explore.router, prefix="/api/explore", tags=["explore"])
+app.include_router(reactions.router, prefix="/api/reactions", tags=["reactions"])
+app.include_router(reports.router, prefix="/api/reports", tags=["reports"])
+app.include_router(moderation.router, prefix="/api/moderation", tags=["moderation"])
 
 app.mount(
     "/api/media/avatars",

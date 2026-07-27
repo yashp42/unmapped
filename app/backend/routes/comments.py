@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, Query
 
-from ..dependencies import get_current_user
-from ..schemas.comments import CommentCreate, CommentOut
-from ..services.comment_service import create_comment, list_comments
+from dependencies import get_current_user
+from schemas.comments import CommentCreate, CommentOut
+from services.comment_service import create_comment, list_comments
 
 router = APIRouter()
 

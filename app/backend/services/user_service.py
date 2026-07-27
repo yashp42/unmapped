@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Any, Optional
 
 from database.connection import get_database
-from ..utils.security import hash_password, verify_password
+from utils.security import hash_password, verify_password
 
 DEFAULT_PROFILE_FIELDS = {
     "display_name": None,

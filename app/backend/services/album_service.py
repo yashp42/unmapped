@@ -1,6 +1,7 @@
 from typing import Any, Optional
 
 from database.connection import get_database
+from services.music_catalog_service import enrich_album
 
 
 async def get_album_universe(album_id: str) -> Optional[dict[str, Any]]:
@@ -9,6 +10,7 @@ async def get_album_universe(album_id: str) -> Optional[dict[str, Any]]:
         return None
 
     artist = await get_database().artists.find_one({"id": album.get("artist_id")}, {"_id": 0})
+    album = await enrich_album(album, (artist or {}).get("name"))
 
     track_ids = album.get("tracks") or []
     if track_ids:

@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { fetchLore } from "../api/lore";
 import CommentThread from "../components/CommentThread";
+import LikeButton from "../components/LikeButton";
+import ReportButton from "../components/ReportButton";
 
 export default function LoreEntry() {
   const { id } = useParams();
@@ -25,7 +27,8 @@ export default function LoreEntry() {
       <div className="flex flex-wrap gap-3 mt-5">
         {l.track_id && <Link to={`/track/${l.track_id}`} className="tag-chip">track / {l.track_id}</Link>}
         {l.album_id && <Link to={`/album/${l.album_id}`} className="tag-chip">album / {l.album_id}</Link>}
-        <span className="tag-chip">{l.votes || 0} votes</span>
+        <LikeButton targetType="lore" targetId={l.id} initialCount={l.votes || 0} />
+        <ReportButton targetType="lore" targetId={l.id} />
       </div>
       <div className="mt-10 editorial-prose dropcap" data-testid="lore-body">
         {(l.body || l.excerpt || "").split("\n\n").map((p, i) => (

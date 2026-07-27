@@ -5,7 +5,7 @@ from uuid import uuid4
 from motor.motor_asyncio import AsyncIOMotorCollection
 
 from database.connection import get_database
-from ..core.collections import CollectionName
+from core.collections import CollectionName
 
 
 def utc_now_iso() -> str:

@@ -29,7 +29,7 @@ export default function TrackPage() {
         <div className="lg:col-span-8">
           <div className="meta-ink mb-2">track · {String(album?.tracks?.indexOf(track.id)+1 || 1).padStart(2,'0')} / {album?.tracks?.length || 1}</div>
           <h1 className="font-display font-black text-5xl md:text-7xl tracking-tighter">{track.title}</h1>
-          {user && (
+          {user?.role === "admin" && (
             <div className="mt-3 flex flex-wrap gap-2">
               <SaveButton
                 type="track"

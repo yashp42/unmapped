@@ -4,8 +4,8 @@ from uuid import uuid4
 from fastapi import APIRouter, HTTPException, status, Query, Depends, Response
 from typing import List
 from database.connection import get_database
-from ..schemas.artists import Artist, ArtistIn, ArtistUpdate
-from ..dependencies import get_current_user
+from schemas.artists import Artist, ArtistIn, ArtistUpdate
+from dependencies import require_admin
 
 router = APIRouter()
 
@@ -25,7 +25,7 @@ async def get_artist(artist_id: str):
 
 
 @router.post("", response_model=Artist, status_code=201)
-async def create_artist(payload: ArtistIn, current_user: dict = Depends(get_current_user)):
+async def create_artist(payload: ArtistIn, current_user: dict = Depends(require_admin)):
     now = datetime.utcnow().isoformat()
     artist = payload.model_dump()
     artist.update({"id": str(uuid4()), "created_at": now, "updated_at": now})
@@ -34,7 +34,7 @@ async def create_artist(payload: ArtistIn, current_user: dict = Depends(get_curr
 
 
 @router.put("/{artist_id}", response_model=Artist)
-async def update_artist(artist_id: str, payload: ArtistUpdate, current_user: dict = Depends(get_current_user)):
+async def update_artist(artist_id: str, payload: ArtistUpdate, current_user: dict = Depends(require_admin)):
     artist = await get_database().artists.find_one({"id": artist_id}, {"_id": 0})
     if not artist:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Artist not found")
@@ -49,7 +49,7 @@ async def update_artist(artist_id: str, payload: ArtistUpdate, current_user: dic
 
 
 @router.delete("/{artist_id}", status_code=204)
-async def delete_artist(artist_id: str, current_user: dict = Depends(get_current_user)):
+async def delete_artist(artist_id: str, current_user: dict = Depends(require_admin)):
     res = await get_database().artists.delete_one({"id": artist_id})
     if res.deleted_count == 0:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Artist not found")

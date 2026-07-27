@@ -1,6 +1,6 @@
 from typing import Literal, Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, model_validator
 
 
 class LoreCreate(BaseModel):
@@ -10,6 +10,14 @@ class LoreCreate(BaseModel):
     album_id: Optional[str] = None
     track_id: Optional[str] = None
     depth: Literal["casual", "community", "deep"] = "community"
+    target_source: Optional[str] = None
+    target_label: Optional[str] = Field(None, max_length=300)
+
+    @model_validator(mode="after")
+    def requires_work(self):
+        if not self.album_id and not self.track_id:
+            raise ValueError("Attach this entry to an album or track")
+        return self
 
 
 class LoreOut(BaseModel):
@@ -26,6 +34,8 @@ class LoreOut(BaseModel):
     comments: int = 0
     created_at: Optional[str] = None
     updated_at: Optional[str] = None
+    target_source: Optional[str] = None
+    target_label: Optional[str] = None
 
     model_config = {"extra": "allow"}
 

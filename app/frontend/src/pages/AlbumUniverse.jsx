@@ -32,7 +32,7 @@ export default function AlbumUniverse() {
         <div className="grid lg:grid-cols-12 gap-8 items-end">
           <div className="lg:col-span-7">
             <div className="meta mb-3" data-testid="album-universe-meta">universe · {album.year} · {artist?.name || album.artist_id}</div>
-            {user && (
+            {user?.role === "admin" && (
               <div className="mt-3 flex flex-wrap gap-2">
                 <SaveButton
                   type="album"

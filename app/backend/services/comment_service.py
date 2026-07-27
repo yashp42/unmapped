@@ -4,7 +4,7 @@ from uuid import uuid4
 from fastapi import HTTPException, status
 
 from database.connection import get_database
-from ..schemas.comments import CommentCreate
+from schemas.comments import CommentCreate
 from .user_service import enrich_user
 
 

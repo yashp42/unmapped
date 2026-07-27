@@ -20,6 +20,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import SearchPage from "./pages/SearchPage";
 import AdminCMS from "./pages/AdminCMS";
+import ArtistPage from "./pages/ArtistPage";
+import WorkPage from "./pages/WorkPage";
+import ModerationDesk from "./pages/ModerationDesk";
 
 export default function App() {
   return (
@@ -30,6 +33,8 @@ export default function App() {
           <Route path="/explore" element={<AppShell><Explore /></AppShell>} />
           <Route path="/track/:id" element={<AppShell><TrackPage /></AppShell>} />
           <Route path="/album/:id" element={<AppShell><AlbumUniverse /></AppShell>} />
+          <Route path="/artist/:id" element={<AppShell><ArtistPage /></AppShell>} />
+          <Route path="/work/:id" element={<AppShell><WorkPage /></AppShell>} />
           <Route path="/connections" element={<AppShell><ConnectionMap /></AppShell>} />
           <Route path="/lore" element={<AppShell><LoreIndex /></AppShell>} />
           <Route path="/lore/:id" element={<AppShell><LoreEntry /></AppShell>} />
@@ -57,6 +62,7 @@ export default function App() {
               </AppShell>
             }
           />
+          <Route path="/admin/moderation" element={<AppShell><AdminRoute><ModerationDesk /></AdminRoute></AppShell>} />
           <Route path="/search" element={<AppShell><SearchPage /></AppShell>} />
           <Route path="/login" element={<AppShell><Login /></AppShell>} />
           <Route path="/register" element={<AppShell><Register /></AppShell>} />

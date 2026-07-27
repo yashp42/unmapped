@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 
-from ..dependencies import get_current_user, get_optional_user
-from ..schemas.users import ProfileUpdate, SaveToggleResponse, UserPrivate, UserPublic
-from ..services.profile_service import get_profile_by_handle
-from ..services.profile_service import _resolve_saved
-from ..services.upload_service import upload_avatar
-from ..services.user_service import (
+from dependencies import get_current_user, get_optional_user
+from schemas.users import ProfileUpdate, SaveToggleResponse, UserPrivate, UserPublic
+from services.profile_service import get_profile_by_handle
+from services.profile_service import _resolve_saved
+from services.upload_service import upload_avatar
+from services.trust_service import contributor_trust
+from services.user_service import (
     enrich_user,
     list_users,
     toggle_saved_album,
@@ -69,6 +70,10 @@ async def get_my_saves(current_user: dict = Depends(get_current_user)):
         "saved_track_ids": user.get("saved_track_ids", []),
         **saves,
     }
+
+@router.get("/me/trust")
+async def get_my_trust(current_user: dict = Depends(get_current_user)):
+    return await contributor_trust(current_user["id"])
 
 
 @router.post("/me/saves/albums/{album_id}", response_model=SaveToggleResponse)

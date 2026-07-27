@@ -47,7 +47,7 @@ export default function ContributorsIndex() {
             <div className="flex gap-2 mt-4">
               <span className="tag-chip">{x.lore_count} lore</span>
               <span className="tag-chip">{x.theory_count} theories</span>
-              {user && (
+              {user?.role === "admin" && (
                 <div className="ml-auto flex gap-2">
                   <button className="brutal-btn" onClick={async (e)=>{ e.preventDefault(); const name = prompt('name', x.name); if (!name) return; setLoadingId(x.id); try { await api.put(`/contributors/${x.id}`, { name }); setC((s)=>s.map(it=>it.id===x.id?{...it,name}:it)); toast.success('updated'); } catch(e){ toast.error('update failed'); } finally { setLoadingId(null); } }} disabled={loadingId!==null && loadingId!==x.id}>
                     {loadingId===x.id ? <><LoadingSpinner size={16} /> <span className="ml-2">Saving</span></> : 'Edit'}

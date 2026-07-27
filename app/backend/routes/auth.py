@@ -2,17 +2,17 @@ from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status, Response
 
-from ..schemas.auth import LoginPayload, RegisterPayload, TokenResponse
-from ..schemas.users import UserPublic
-from ..services.user_service import (
+from schemas.auth import LoginPayload, RegisterPayload, TokenResponse
+from schemas.users import UserPublic
+from services.user_service import (
     authenticate_user,
     create_user,
     enrich_user,
     find_user_by_email,
     find_user_by_handle,
 )
-from ..utils.security import create_access_token, create_refresh_token, decode_token
-from ..dependencies import get_current_user
+from utils.security import create_access_token, create_refresh_token, decode_token
+from dependencies import get_current_user
 
 router = APIRouter()
 

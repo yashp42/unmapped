@@ -5,9 +5,9 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query, Response
 from typing import List
 
 from database.connection import get_database
-from ..dependencies import get_current_user
-from ..schemas.albums import Album, AlbumIn, AlbumUpdate
-from ..services.album_service import get_album_universe
+from dependencies import require_admin
+from schemas.albums import Album, AlbumIn, AlbumUpdate
+from services.album_service import get_album_universe
 
 router = APIRouter()
 
@@ -27,7 +27,7 @@ async def get_album(album_id: str):
 
 
 @router.post("", response_model=Album, status_code=201)
-async def create_album(payload: AlbumIn, current_user: dict = Depends(get_current_user)):
+async def create_album(payload: AlbumIn, current_user: dict = Depends(require_admin)):
     now = datetime.utcnow().isoformat()
     album = payload.model_dump()
     album.update({"id": str(uuid4()), "created_at": now, "updated_at": now})
@@ -39,7 +39,7 @@ async def create_album(payload: AlbumIn, current_user: dict = Depends(get_curren
 async def update_album(
     album_id: str,
     payload: AlbumUpdate,
-    current_user: dict = Depends(get_current_user),
+    current_user: dict = Depends(require_admin),
 ):
     album = await get_database().albums.find_one({"id": album_id}, {"_id": 0})
     if not album:
@@ -55,7 +55,7 @@ async def update_album(
 
 
 @router.delete("/{album_id}", status_code=204)
-async def delete_album(album_id: str, current_user: dict = Depends(get_current_user)):
+async def delete_album(album_id: str, current_user: dict = Depends(require_admin)):
     res = await get_database().albums.delete_one({"id": album_id})
     if res.deleted_count == 0:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Album not found")

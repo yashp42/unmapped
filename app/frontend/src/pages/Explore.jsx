@@ -1,89 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../lib/api";
-import { useAuth } from "../lib/auth";
-import { toast } from "sonner";
-import LoadingSpinner from "../components/LoadingSpinner";
+
+const tabs = [{ id: "albums", label: "Album Universes" }, { id: "artists", label: "Artists" }, { id: "tracks", label: "Tracks" }];
+function Cover({ src, alt }) { return src ? <img src={src} alt={alt} className="h-full w-full object-cover" loading="lazy" /> : <div className="h-full w-full bg-[var(--parchment-deep)] grain" />; }
 
 export default function Explore() {
-  const [tab, setTab] = useState("albums");
-  const [albums, setAlbums] = useState([]);
-  const [artists, setArtists] = useState([]);
-  const [tracks, setTracks] = useState([]);
-  const { user } = useAuth();
-  const [actionLoadingId, setActionLoadingId] = useState(null);
-  useEffect(() => {
-    Promise.all([api.get("/albums"), api.get("/artists"), api.get("/tracks")])
-      .then(([a, ar, t]) => { setAlbums(a.data); setArtists(ar.data); setTracks(t.data); });
-  }, []);
-
-  const tabs = [{ id: "albums", label: "Album Universes" }, { id: "artists", label: "Artists" }, { id: "tracks", label: "Tracks" }];
-
-  return (
-    <div className="max-w-[1480px] mx-auto px-6 py-12">
-      <div className="meta-ink mb-3">section 02 · the index</div>
-      <h1 className="font-display font-black text-5xl md:text-7xl tracking-tighter">Explore.</h1>
-      <p className="font-editorial italic text-xl md:text-2xl mt-3 max-w-2xl">no algorithm. no feed. choose a door.</p>
-
-      <div className="mt-8 flex flex-wrap gap-2 border-b-2 border-[var(--ink)] pb-3">
-        {tabs.map((t) => (
-          <button key={t.id} onClick={() => setTab(t.id)} data-testid={`explore-tab-${t.id}`}
-            className={`px-4 py-2 font-display font-bold text-sm border-2 border-[var(--ink)] ${tab===t.id?'bg-[var(--ink)] text-[var(--parchment)]':'bg-white hover:bg-[var(--parchment-deep)]'}`}>
-            {t.label}
-          </button>
-        ))}
-      </div>
-
-      {tab === "albums" && (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
-          {albums.map((a) => (
-            <Link key={a.id} to={`/album/${a.id}`} className="brutal-card p-0 overflow-hidden" data-testid={`album-card-${a.id}`}>
-              <div className="aspect-[5/4] relative grain" style={{ background: a.color }}>
-                <div className="absolute inset-4 border-2 border-[var(--ink)] p-4 flex flex-col justify-between">
-                  <span className="meta-ink mix-blend-multiply">{a.year}</span>
-                  <span className="font-display font-black text-3xl tracking-tighter text-[var(--ink)] mix-blend-multiply">{a.title.toLowerCase()}</span>
-                </div>
-              </div>
-              <div className="p-5 border-t-2 border-[var(--ink)]">
-                <div className="meta-ink">{a.artist_id}</div>
-                <p className="font-editorial italic text-lg mt-1">{a.universe_tagline}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
-
-      {tab === "artists" && (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
-              {artists.map((a) => (
-            <div key={a.id} className="brutal-card-static p-6" data-testid={`artist-card-${a.id}`}>
-              <div className="meta-ink">{a.scene} · {a.era}</div>
-              <div className="font-display font-black text-3xl tracking-tighter mt-2">{a.name}</div>
-              <p className="font-editorial italic text-lg mt-2">{a.tagline}</p>
-              {user && (
-                <div className="mt-3 flex gap-2">
-                      <button className="brutal-btn" onClick={async ()=>{ const newName = prompt('name', a.name); if(!newName) return; setActionLoadingId(a.id); try{ await api.put(`/artists/${a.id}`, { name: newName }); const r = await api.get('/artists'); setArtists(r.data); toast.success('updated'); } catch(e){ toast.error('update failed'); } finally { setActionLoadingId(null); } }} disabled={actionLoadingId!==null && actionLoadingId!==a.id}>{actionLoadingId===a.id ? <><LoadingSpinner size={16} className="inline-block"/> <span className="ml-2">Saving</span></> : 'Edit'}</button>
-                      <button className="brutal-btn" onClick={async ()=>{ if(!confirm('Delete artist?')) return; setActionLoadingId(a.id); try{ await api.delete(`/artists/${a.id}`); setArtists((s)=>s.filter(x=>x.id!==a.id)); toast.success('deleted'); } catch(e){ toast.error('delete failed'); } finally { setActionLoadingId(null); } }} disabled={actionLoadingId!==null && actionLoadingId!==a.id}>{actionLoadingId===a.id ? <><LoadingSpinner size={16} className="inline-block"/> <span className="ml-2">Deleting</span></> : 'Delete'}</button>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {tab === "tracks" && (
-        <div className="divide-y-2 divide-[var(--ink)] border-2 border-[var(--ink)] mt-8 brutal-shadow bg-white">
-          {tracks.map((t, i) => (
-            <Link key={t.id} to={`/track/${t.id}`} className="flex items-center gap-4 px-5 py-3 hover:bg-[var(--parchment-deep)]" data-testid={`track-row-${t.id}`}>
-              <span className="meta-ink w-10">{String(i+1).padStart(2,'0')}</span>
-              <span className="font-display font-bold text-lg flex-1">{t.title}</span>
-              <span className="meta-ink">{t.album_id}</span>
-              <span className="meta-ink">{t.duration}</span>
-              <span className="tag-chip">{t.lore_count} lore</span>
-            </Link>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  const [tab, setTab] = useState("albums"); const [catalog, setCatalog] = useState({ albums: [], artists: [], tracks: [] }); const [results, setResults] = useState(null); const [query, setQuery] = useState(""); const [loading, setLoading] = useState(true); const [searching, setSearching] = useState(false); const [error, setError] = useState("");
+  useEffect(() => { api.get("/explore").then((r) => setCatalog(r.data)).catch(() => setError("The archive is resting for a moment. Please try again.")).finally(() => setLoading(false)); }, []);
+  useEffect(() => { const term = query.trim(); if (term.length < 2) { setResults(null); setSearching(false); return; } setSearching(true); const timer = setTimeout(() => api.get("/explore/search", { params: { q: term } }).then((r) => { setResults(r.data); setError(""); }).catch(() => { setResults(null); setError("That search could not be opened right now."); }).finally(() => setSearching(false)), 300); return () => clearTimeout(timer); }, [query]);
+  const items = useMemo(() => { const source = results || catalog; const term = query.trim().toLowerCase(); return (source[tab] || []).filter((item) => !results || !term || [item.title, item.name, item.artist_name, item.album_title].filter(Boolean).join(" ").toLowerCase().includes(term)); }, [catalog, results, tab, query]);
+  return <div className="max-w-[1480px] mx-auto px-6 py-12"><div className="meta-ink mb-3">section 02 · the index</div><h1 className="font-display font-black text-5xl md:text-7xl tracking-tighter">Explore.</h1><p className="font-editorial italic text-xl md:text-2xl mt-3 max-w-2xl">no algorithm. no feed. choose a door.</p>
+    <div className="mt-8 grid gap-3 lg:grid-cols-[1fr_auto] items-end border-b-2 border-[var(--ink)] pb-3"><label className="block max-w-xl"><span className="sr-only">Search the music archive</span><input value={query} onChange={(e) => setQuery(e.target.value)} className="brutal-input" placeholder="search songs, albums, artists" /></label><div className="flex flex-wrap gap-2">{tabs.map((item) => <button key={item.id} onClick={() => setTab(item.id)} className={`px-4 py-2 font-display font-bold text-sm border-2 border-[var(--ink)] ${tab === item.id ? "bg-[var(--ink)] text-[var(--parchment)]" : "bg-white hover:bg-[var(--parchment-deep)]"}`}>{item.label}</button>)}</div></div>
+    <div className="sr-only" aria-live="polite">{searching ? "Searching music" : `${items.length} results`}</div>{loading && <div className="mt-8 meta-ink">opening the archive…</div>}{error && <div className="mt-8 brutal-card-static p-5 font-editorial italic text-xl">{error} <button onClick={() => window.location.reload()} className="underline underline-offset-4">try again</button></div>}{!loading && !error && !items.length && <div className="mt-8 brutal-card-static p-6 font-editorial italic text-xl">nothing here yet. try a different name.</div>}
+    {tab === "albums" && <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">{items.map((album) => <a key={album.id} href={album.id.startsWith("external-") ? `/work/${album.id}` : `/album/${album.id}`} className="brutal-card overflow-hidden"><div className="aspect-square"><Cover src={album.artwork_url} alt={`${album.title} cover`} /></div><div className="p-5 border-t-2 border-[var(--ink)]"><div className="meta-ink">{album.artist_name} · {album.year}</div><div className="font-display font-black text-3xl tracking-tighter mt-1">{album.title}</div><p className="font-editorial italic text-lg mt-1">{album.universe_tagline}</p></div></a>)}</div>}
+    {tab === "artists" && <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">{items.map((artist) => <a key={artist.id} href={artist.external_url || `/artist/${artist.id}`} target={artist.external_url ? "_blank" : undefined} rel={artist.external_url ? "noreferrer" : undefined} className="brutal-card overflow-hidden"><div className="aspect-[4/3]"><Cover src={artist.portrait_url} alt={`${artist.name} portrait`} /></div><div className="p-5 border-t-2 border-[var(--ink)]"><div className="meta-ink">{artist.scene} · {artist.era}</div><div className="font-display font-black text-3xl tracking-tighter mt-1">{artist.name}</div><p className="font-editorial italic text-lg mt-2">{artist.tagline}</p></div></a>)}</div>}
+    {tab === "tracks" && <div className="divide-y-2 divide-[var(--ink)] border-2 border-[var(--ink)] mt-8 brutal-shadow bg-white">{items.map((track, index) => <a key={track.id} href={track.id.startsWith("external-") ? `/work/${track.id}` : `/track/${track.id}`} className="flex items-center gap-4 px-4 md:px-5 py-3 hover:bg-[var(--parchment-deep)]"><span className="meta-ink w-7">{String(index + 1).padStart(2, "0")}</span><div className="h-12 w-12 shrink-0 border border-[var(--ink)]"><Cover src={track.artwork_url} alt={`${track.title} cover`} /></div><div className="min-w-0 flex-1"><div className="font-display font-bold text-lg truncate">{track.title}</div><div className="meta-ink truncate">{track.artist_name} · {track.album_title || track.album_id}</div></div><span className="meta-ink hidden sm:block">{track.duration || ""}</span></a>)}</div>}
+  </div>;
 }

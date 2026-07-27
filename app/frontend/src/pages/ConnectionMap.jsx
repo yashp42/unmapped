@@ -3,75 +3,19 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import ForceGraph2D from "react-force-graph-2d";
 import { api } from "../lib/api";
 
+const TYPES = ["album-sibling", "mood-cousin", "lyrical-twin", "production-lineage", "scene-overlap", "lore-attached", "theory-attached"];
+const NODE_COLORS = { track: "#FF1493", lore: "#CCFF00", theory: "#0055FF" };
+
 export default function ConnectionMap() {
-  const [params] = useSearchParams();
-  const focus = params.get("track");
-  const [data, setData] = useState({ nodes: [], links: [] });
-  const [hover, setHover] = useState(null);
-  const nav = useNavigate();
-  const fgRef = useRef();
-
-  useEffect(() => {
-    const url = focus ? `/connections/graph?track_id=${focus}` : "/connections/graph";
-    api.get(url).then((r) => {
-      const links = r.data.edges.map((e) => ({ ...e, source: e.source, target: e.target }));
-      setData({ nodes: r.data.nodes, links });
-    });
-  }, [focus]);
-
-  const albumColor = (id) => ({ blonde: "#F5E6B3", "to-pimp-a-butterfly": "#3B2E1F", "in-rainbows": "#C45B2E", igor: "#E84C8A", ctrl: "#8FB89C", "1000-gecs": "#00E5FF" }[id] || "#FF1493");
-
-  return (
-    <div className="max-w-[1480px] mx-auto px-6 py-12">
-      <div className="meta-ink mb-2">graph · the connection map</div>
-      <div className="flex items-end justify-between flex-wrap gap-3">
-        <h1 className="font-display font-black text-5xl md:text-7xl tracking-tighter">the map.</h1>
-        <p className="font-editorial italic text-xl max-w-md">every line is a reason to listen to another song. drag, zoom, click a node.</p>
-      </div>
-
-      <div className="brutal-card-static mt-8 relative overflow-hidden" style={{ height: "640px", background: "#fffdf6" }} data-testid="connection-graph">
-        <ForceGraph2D
-          ref={fgRef}
-          graphData={data}
-          backgroundColor="#fffdf6"
-          nodeRelSize={6}
-          linkColor={() => "#111"}
-          linkWidth={(l) => 1 + (l.weight || 0.5) * 2}
-          nodeLabel="label"
-          onNodeHover={setHover}
-          onNodeClick={(n) => nav(`/track/${n.id}`)}
-          nodeCanvasObject={(node, ctx, globalScale) => {
-            const label = node.label;
-            const fontSize = 13 / globalScale;
-            ctx.font = `700 ${fontSize}px 'Cabinet Grotesk', sans-serif`;
-            ctx.fillStyle = albumColor(node.album_id);
-            ctx.beginPath();
-            ctx.arc(node.x, node.y, 7, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.strokeStyle = "#111";
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
-            ctx.fillStyle = "#111";
-            ctx.textAlign = "left";
-            ctx.fillText(label, node.x + 10, node.y + 4);
-          }}
-          cooldownTicks={120}
-        />
-        {hover && (
-          <div className="absolute top-3 right-3 brutal-card-static p-3 bg-white" style={{maxWidth: 240}}>
-            <div className="meta-ink">{hover.album_id}</div>
-            <div className="font-display font-bold text-lg">{hover.label}</div>
-            <div className="meta-ink mt-1">click to enter</div>
-          </div>
-        )}
-      </div>
-
-      <div className="mt-6 flex flex-wrap gap-3">
-        <div className="meta-ink mr-2">edge types →</div>
-        {[["album-sibling", "track lives in same record"], ["mood-cousin", "shares an emotional texture"], ["lyrical-twin", "rhymes the same idea"], ["production-lineage", "shares producer DNA"], ["scene-overlap", "same room, different night"]].map(([t, d]) => (
-          <span key={t} className="tag-chip"><strong>{t}</strong> · {d}</span>
-        ))}
-      </div>
-    </div>
-  );
+  const [params] = useSearchParams(); const focus = params.get("track"); const nav = useNavigate(); const fgRef = useRef();
+  const [data, setData] = useState({ nodes: [], links: [] }); const [selected, setSelected] = useState(null); const [filters, setFilters] = useState([]); const [query, setQuery] = useState(""); const [pathStart, setPathStart] = useState(null); const [pathEnd, setPathEnd] = useState(null); const [pathText, setPathText] = useState("");
+  useEffect(() => { const search = new URLSearchParams(); if (focus) search.set("track_id", focus); if (filters.length) search.set("types", filters.join(",")); api.get(`/connections/graph?${search}`).then((r) => setData({ nodes: r.data.nodes, links: r.data.edges })).catch(() => setData({ nodes: [], links: [] })); }, [focus, filters]);
+  const enter = (node) => setSelected(node);
+  const openSelected = () => { if (!selected) return; if (selected.node_type === "track") nav(`/track/${selected.id}`); if (selected.node_type === "lore") nav(`/lore/${selected.id.replace("lore:", "")}`); if (selected.node_type === "theory") nav(`/theory/${selected.id.replace("theory:", "")}`); };
+  const findPath = async () => { if (!pathStart || !pathEnd) return; const r = await api.get("/connections/path", { params: { from_id: pathStart.id, to_id: pathEnd.id } }); setPathText(r.data.nodes.length ? r.data.nodes.map((node) => node.label).join(" → ") : "No route is documented between these tracks yet."); };
+  const visible = query ? { nodes: data.nodes.filter((n) => n.label.toLowerCase().includes(query.toLowerCase())), links: data.links } : data;
+  return <div className="max-w-[1480px] mx-auto px-6 py-12"><div className="meta-ink mb-2">graph · the connection map</div><div className="flex items-end justify-between flex-wrap gap-3"><h1 className="font-display font-black text-5xl md:text-7xl tracking-tighter">the map.</h1><p className="font-editorial italic text-xl max-w-md">follow a song into the writing, arguments, and other songs it unlocked.</p></div>
+    <div className="mt-8 grid xl:grid-cols-[1fr_310px] gap-5"><div className="brutal-card-static relative overflow-hidden" style={{ height: "640px", background: "#fffdf6" }}><ForceGraph2D ref={fgRef} graphData={visible} backgroundColor="#fffdf6" nodeRelSize={6} linkColor={(link) => link.type?.includes("attached") ? "#555" : "#111"} linkWidth={(link) => 1 + (link.weight || .5) * 2} nodeLabel="label" onNodeClick={enter} nodeCanvasObject={(node, ctx, scale) => { const size = (node.node_type === "track" ? 7 : 5) / Math.sqrt(scale); ctx.fillStyle = NODE_COLORS[node.node_type] || "#111"; ctx.beginPath(); ctx.arc(node.x, node.y, size, 0, 2 * Math.PI); ctx.fill(); ctx.strokeStyle = "#111"; ctx.lineWidth = 1 / scale; ctx.stroke(); if (scale > 1.15) { ctx.font = `${12 / scale}px 'Cabinet Grotesk'`; ctx.fillStyle = "#111"; ctx.fillText(node.label, node.x + size + 4 / scale, node.y + 3 / scale); } }} cooldownTicks={120} /></div>
+      <aside className="brutal-card-static p-5"><div className="meta-ink">map controls</div><input className="brutal-input mt-3" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="find a node" /><div className="mt-5"><div className="meta-ink mb-2">show relationships</div><div className="flex flex-wrap gap-2">{TYPES.map((type) => <button key={type} onClick={() => setFilters((f) => f.includes(type) ? f.filter((x) => x !== type) : [...f, type])} className={`tag-chip ${filters.includes(type) ? "bg-[var(--ink)] text-[var(--parchment)]" : ""}`}>{type}</button>)}</div></div><div className="mt-6 border-t-2 border-[var(--ink)] pt-4"><div className="meta-ink">path finder</div><p className="font-editorial italic mt-2">Select two track nodes to see the shortest documented route.</p>{selected?.node_type === "track" && <div className="flex gap-2 mt-3"><button className="tag-chip" onClick={() => setPathStart(selected)}>start</button><button className="tag-chip" onClick={() => setPathEnd(selected)}>end</button><button className="tag-chip bg-[var(--acid)]" onClick={findPath} disabled={!pathStart || !pathEnd}>find</button></div>}{(pathStart || pathEnd) && <div className="meta-ink mt-3">{pathStart?.label || "…"} → {pathEnd?.label || "…"}</div>}{pathText && <p className="font-editorial italic mt-3">{pathText}</p>}</div><div className="mt-6 border-t-2 border-[var(--ink)] pt-4"><div className="meta-ink">reading the map</div><p className="font-editorial italic mt-2">Pink is a track. Acid is lore. Blue is a theory. Filter lines to turn a dense listening history into a single question.</p>{selected && <><button className="tag-chip mt-3" onClick={openSelected}>open · {selected.label}</button></>}</div></aside></div>
+  </div>;
 }

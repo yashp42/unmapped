@@ -2,20 +2,20 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 
-from ..dependencies import require_admin
-from ..repositories.albums import albums_repository
-from ..repositories.artists import artists_repository
-from ..repositories.lore import lore_repository
-from ..repositories.relationships import relationships_repository
-from ..repositories.theories import theories_repository
-from ..repositories.tracks import tracks_repository
-from ..schemas.albums import Album, AlbumIn, AlbumUpdate
-from ..schemas.artists import Artist, ArtistIn, ArtistUpdate
-from ..schemas.lore import LoreCreate, LoreOut
-from ..schemas.relationships import Relationship, RelationshipCreate, RelationshipUpdate
-from ..schemas.theories import Theory, TheoryCreate, TheoryUpdate
-from ..schemas.tracks import Track, TrackIn, TrackUpdate
-from ..services.lore_service import create_lore_entry
+from dependencies import require_admin
+from repositories.albums import albums_repository
+from repositories.artists import artists_repository
+from repositories.lore import lore_repository
+from repositories.relationships import relationships_repository
+from repositories.theories import theories_repository
+from repositories.tracks import tracks_repository
+from schemas.albums import Album, AlbumIn, AlbumUpdate
+from schemas.artists import Artist, ArtistIn, ArtistUpdate
+from schemas.lore import LoreCreate, LoreOut
+from schemas.relationships import Relationship, RelationshipCreate, RelationshipUpdate
+from schemas.theories import Theory, TheoryCreate, TheoryUpdate
+from schemas.tracks import Track, TrackIn, TrackUpdate
+from services.lore_service import create_lore_entry
 
 router = APIRouter(dependencies=[Depends(require_admin)])
 

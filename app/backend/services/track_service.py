@@ -1,6 +1,7 @@
 from typing import Any, Optional
 
 from database.connection import get_database
+from services.music_catalog_service import enrich_track
 
 
 async def get_track_detail(track_id: str) -> Optional[dict[str, Any]]:
@@ -10,6 +11,7 @@ async def get_track_detail(track_id: str) -> Optional[dict[str, Any]]:
 
     artist = await get_database().artists.find_one({"id": track.get("artist_id")}, {"_id": 0})
     album = await get_database().albums.find_one({"id": track.get("album_id")}, {"_id": 0})
+    track = await enrich_track(track, (artist or {}).get("name"), album)
 
     lore = await get_database().lore.find({"track_id": track_id}, {"_id": 0}).sort("votes", -1).to_list(length=20)
     samples = await get_database().sample_chains.find({"track_id": track_id}, {"_id": 0}).to_list(length=20)

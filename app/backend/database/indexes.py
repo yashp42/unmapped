@@ -1,4 +1,4 @@
-from ..config import settings
+from backend.config import settings
 from database.connection import get_database
 
 
@@ -63,3 +63,15 @@ async def create_indexes():
     await get_database().annotations.create_index([("target_type", 1), ("target_id", 1), ("created_at", 1)])
     await get_database().annotations.create_index("user_id")
     await get_database().annotations.create_index("status")
+    await get_database().reactions.create_index([("target_type", 1), ("target_id", 1), ("user_id", 1), ("kind", 1)], unique=True)
+    await get_database().catalog_cache.create_index("expires_at", expireAfterSeconds=0)
+    await get_database().catalog_entities.create_index("id", unique=True)
+    await get_database().catalog_entities.create_index([("kind", 1), ("title", "text"), ("artist_name", "text")], name="catalog_entities_search")
+    await get_database().submission_events.create_index([("user_id", 1), ("kind", 1), ("created_at", 1)])
+    await get_database().submission_events.create_index("expires_at", expireAfterSeconds=0)
+    await get_database().connection_submissions.create_index([("status", 1), ("created_at", -1)])
+    await get_database().reports.create_index([("target_type", 1), ("target_id", 1), ("reporter_id", 1)], unique=True)
+    await get_database().lore.create_index([("status", 1), ("created_at", -1)])
+    await get_database().theories.create_index([("status", 1), ("created_at", -1)])
+    await get_database().audit_events.create_index([("target_type", 1), ("target_id", 1), ("created_at", -1)])
+    await get_database().content_revisions.create_index([("content_type", 1), ("content_id", 1), ("created_at", -1)])
